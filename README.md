@@ -1,1 +1,1 @@
-java-budget4u
+Budget4U its a program made to help people manage a little bit better they money. This includes incomes, outlays and clasifies them in different categories. This will help people to understand which are they main outlays and have more control over their own money.
