@@ -1,5 +1,5 @@
 package model;
 
 public interface AddNode {
-	public void addNode();
+	public void addNode(Node n);
 }

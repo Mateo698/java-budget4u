@@ -37,14 +37,22 @@ public class IncomeNode extends Node implements AddNode,CheckNode{
 	}
 
 	@Override
-	public void addNode() {
-		//PENDING
-		
+	public boolean checkNode() {
+		if(greaterNode != null || lowerNode != null) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 
 	@Override
-	public boolean checkNode() {
-		// TODO Auto-generated method stub
-		return false;
+	public void addNode(Node n) {
+		IncomeNode realNode = (IncomeNode) n;
+		if(greaterNode.getIncome().getCreationDate().compareTo(realNode.getIncome().getCreationDate()) > 0) {
+			greaterNode.addNode(realNode);
+		}else {
+			lowerNode.addNode(realNode);
+		}
+		
 	}
 }

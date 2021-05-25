@@ -1,7 +1,10 @@
 package ui;
 
+<<<<<<< Updated upstream
 import java.util.Date;
 
+=======
+>>>>>>> Stashed changes
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -17,4 +20,8 @@ public class Main extends Application{
 		// TODO Auto-generated method stub
 		
 	}
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 }
