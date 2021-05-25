@@ -2,37 +2,63 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="696.0" prefWidth="862.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <top>
-      <HBox alignment="CENTER" prefHeight="59.0" prefWidth="826.0" style="-fx-background-color: #4da8fc;" BorderPane.alignment="CENTER">
-         <children>
-            <Button mnemonicParsing="false" style="-fx-background-color: ff0000;" text="Log out">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
-            </Button>
-            <Pane prefHeight="59.0" prefWidth="292.0" />
-            <Label text="Username">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Label>
-            <Pane prefHeight="59.0" prefWidth="334.0" />
-            <Label text="Label">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Label>
-         </children>
-      </HBox>
-   </top>
    <left>
-      <BorderPane prefHeight="637.0" prefWidth="862.0" BorderPane.alignment="CENTER" />
+      <BorderPane fx:id="changingPane" prefHeight="637.0" prefWidth="862.0" BorderPane.alignment="CENTER" />
    </left>
+   <top>
+      <VBox prefHeight="84.0" prefWidth="862.0" BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <HBox alignment="CENTER" prefHeight="59.0" prefWidth="826.0" style="-fx-background-color: #4da8fc;">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#MAINPANElogOut" style="-fx-background-color: ff0000;" text="Log out">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Button>
+                  <Pane prefHeight="59.0" prefWidth="292.0" />
+                  <Label fx:id="MAINPANEusernameLabel" text="Username">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Pane prefHeight="59.0" prefWidth="334.0" />
+                  <Label fx:id="MAINPANEhourLabel" text="Label">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
 </BorderPane>
