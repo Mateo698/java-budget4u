@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="637.0" prefWidth="862.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <HBox alignment="CENTER" prefHeight="78.0" prefWidth="600.0" style="-fx-background-color: #4da8fc;" BorderPane.alignment="CENTER">
@@ -34,7 +33,7 @@
                   <TableColumn fx:id="INCOMELISTtypeCol" prefWidth="182.0" text="Type" />
               </columns>
             </TableView>
-            <Label text="Dobule click to edit">
+            <Label text="Dobule click to edit" textFill="#000000ab">
                <font>
                   <Font name="System Bold" size="17.0" />
                </font>

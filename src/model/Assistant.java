@@ -16,14 +16,19 @@ public class Assistant {
 		boolean created = false;
 		boolean repited = false;
 		
+		if(allUsers.size() == 0) {
+			created = true;
+		}
 		for(int i = 0; i < allUsers.size() && !repited; i++) {
 			if(allUsers.get(i).getName().equals(name)) {
 				repited = true;
 				created = false;
+				
 			}else {
 				created = true;
 			}
 		}
+		
 		
 		if(created && type.equals(TypesOfUser.EMPLOYEE)) {
 			UserEmployee newUser = new UserEmployee(name, pass, type);
