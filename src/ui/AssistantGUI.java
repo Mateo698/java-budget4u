@@ -21,6 +21,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Assistant;
 import model.TypesOfUser;
+import threads.TimeThread;
 
 
 public class AssistantGUI {
@@ -53,7 +54,7 @@ public class AssistantGUI {
     		nd.setController(this);
     		Parent mainM = nd.load();
     		changingPane.getChildren().setAll(mainM);
-    		
+    		time.start();
     		
     	}else {
     		Alert alertWarnings = new Alert(AlertType.WARNING);
@@ -118,6 +119,12 @@ public class AssistantGUI {
 
     @FXML
     private Button MAINMENUincomesBttn;
+    
+    private TimeThread time;
+    
+    public void MAINPANEupdateTime(String realTime) {
+    	MAINPANEhourLabel.setText(realTime);
+    }
 
     @FXML
     void MAINMENUincomesBttn(ActionEvent event) throws IOException {
@@ -225,5 +232,6 @@ public class AssistantGUI {
     	mainStage.setScene(e);
     	mainStage.show();
 		changingPane = new BorderPane();
+		time = new TimeThread(this);
 	}
 }
