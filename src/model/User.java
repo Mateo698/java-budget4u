@@ -36,7 +36,7 @@ public abstract class User {
 	}
 	
 	public void removeIncome(Income income) {
-		firstIncome
+		//firstIncome;
 	}
 	
 	public IncomeNode getIncomeNode() {

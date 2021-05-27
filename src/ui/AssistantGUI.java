@@ -2,6 +2,8 @@ package ui;
 
 import java.io.IOException;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,17 +47,7 @@ public class AssistantGUI {
     	String username = LOGINUserTxt.getText();
     	String pass = LOGINPasswordTxt.getText();
     	if(assistant.login(username, pass)) {
-    		FXMLLoader st = new FXMLLoader(getClass().getResource("MainPane.fxml"));
-    		st.setController(this);
-    		Parent root = st.load();
-    		Scene e = new Scene(root);
-    		mainStage.setScene(e);
-    		FXMLLoader nd = new FXMLLoader(getClass().getResource("MainMenu.fxml"));
-    		nd.setController(this);
-    		Parent mainM = nd.load();
-    		changingPane.getChildren().setAll(mainM);
-    		time.start();
-    		
+    		showMainMenu();
     	}else {
     		Alert alertWarnings = new Alert(AlertType.WARNING);
 	    	alertWarnings.setTitle("Error");
@@ -68,11 +60,7 @@ public class AssistantGUI {
 
     @FXML
     void LOGINRegister(ActionEvent event) throws IOException {
-    	FXMLLoader x = new FXMLLoader(getClass().getResource("Register.fxml"));
-    	x.setController(this);
-    	Parent root = x.load();
-    	Scene e = new Scene(root);
-    	mainStage.setScene(e);
+    	showRegister();
     }
     
  
@@ -85,16 +73,43 @@ public class AssistantGUI {
     private PasswordField REGISTERPasswordTxt;
 
     @FXML
-    private ComboBox<?> REGISTERTypeOfUser;
+    private ComboBox<TypesOfUser> REGISTERTypeOfUser;
 
     private Stage mainStage;
     
-    private Stage popupStage;
+    //private Stage popupStage;
     
     
     @FXML
-    void REGISTERRegister(ActionEvent event) {
+    void REGISTERRegister(ActionEvent event) throws IOException {
+    	String name = REGISTERUsernameTxt.getText();
+    	String pass = REGISTERPasswordTxt.getText();
+    	TypesOfUser type = REGISTERTypeOfUser.getValue();
     	
+    	if(name == "" || pass == "" || type == null) {
+    		Alert alert = new Alert(AlertType.WARNING);
+	    	alert.setTitle("Error");
+			alert.setHeaderText("Missing information!");
+			alert.setContentText("Please fill all the fields.");
+			alert.showAndWait();			
+    	}else {
+        	boolean done = assistant.createUser(name, pass, type);
+        	
+    		if(done) {
+    			Alert alert = new Alert(AlertType.CONFIRMATION);
+    			alert.setTitle("Done");
+    			alert.setHeaderText("User registred succesfully");
+    			alert.setContentText("The user has been created.");
+    			alert.showAndWait();	
+    			showLogin();
+    		}else {
+    			Alert alert = new Alert(AlertType.WARNING);
+    			alert.setTitle("Error");
+    			alert.setHeaderText("Something went wrong!");
+    			alert.setContentText("Try with another name");
+    			alert.showAndWait();
+    		}
+    	}
     }
     
     //------------------------------------------------------ Main Pane/Menu ------------------------------------------------------
@@ -128,18 +143,12 @@ public class AssistantGUI {
 
     @FXML
     void MAINMENUincomesBttn(ActionEvent event) throws IOException {
-    	FXMLLoader x = new FXMLLoader(getClass().getResource("IncomeList.fxml"));
-    	x.setController(this);
-    	Parent r = x.load();
-    	changingPane.getChildren().setAll(r);
+    	showIncomeList();
     }
 
     @FXML
     void MAINMENUoutlaysBttn(ActionEvent event) throws IOException {
-    	FXMLLoader x = new FXMLLoader(getClass().getResource("OutlayList.fxml"));
-    	x.setController(this);
-    	Parent r = x.load();
-    	changingPane.getChildren().setAll(r);
+    	showOutlayList();
     }
     
     //------------------------------------------------------ Incomes List ------------------------------------------------------
@@ -234,4 +243,52 @@ public class AssistantGUI {
 		changingPane = new BorderPane();
 		time = new TimeThread(this);
 	}
+    
+    private void showLogin() throws IOException {
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
+    	loader.setController(this);
+    	Parent root = loader.load();
+    	mainStage = new Stage();
+    	Scene e = new Scene(root);
+    	mainStage.setScene(e);
+    }
+    
+    private void showMainMenu() throws IOException {
+    	FXMLLoader st = new FXMLLoader(getClass().getResource("MainPane.fxml"));
+		st.setController(this);
+		Parent root = st.load();
+		Scene e = new Scene(root);
+		mainStage.setScene(e);
+		FXMLLoader nd = new FXMLLoader(getClass().getResource("MainMenu.fxml"));
+		nd.setController(this);
+		Parent mainM = nd.load();
+		changingPane.getChildren().setAll(mainM);
+		time.start();
+		
+    }
+    private void showRegister() throws IOException {
+    	FXMLLoader x = new FXMLLoader(getClass().getResource("Register.fxml"));
+    	x.setController(this);
+    	Parent root = x.load();
+    	Scene e = new Scene(root);
+    	mainStage.setScene(e);
+
+    	ObservableList<TypesOfUser> types  = FXCollections.observableArrayList();
+    	types.addAll(TypesOfUser.GENERIC, TypesOfUser.STUDENT, TypesOfUser.EMPLOYEE);
+    	REGISTERTypeOfUser.setItems(types);
+    }
+    
+    private void showIncomeList() throws IOException {
+    	FXMLLoader x = new FXMLLoader(getClass().getResource("IncomeList.fxml"));
+    	x.setController(this);
+    	Parent r = x.load();
+    	changingPane.getChildren().setAll(r);
+    }
+    
+    private void showOutlayList() throws IOException {
+    	FXMLLoader x = new FXMLLoader(getClass().getResource("OutlayList.fxml"));
+    	x.setController(this);
+    	Parent r = x.load();
+    	changingPane.getChildren().setAll(r);
+    }
 }

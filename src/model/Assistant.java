@@ -6,13 +6,8 @@ import java.util.Date;
 public class Assistant {
 	ArrayList<User> allUsers;
 	
-
-	
-	
-	
 	public Assistant() {
-		allUsers = new ArrayList<User>();
-		
+		allUsers = new ArrayList<User>();		
 	}
 	
 	//------------------------------------------------------  Users code ------------------------------------------------------ 
