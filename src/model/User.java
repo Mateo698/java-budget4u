@@ -35,6 +35,18 @@ public abstract class User {
 		}
 	}
 	
+	public void removeIncome(Income income) {
+		firstIncome
+	}
+	
+	public IncomeNode getIncomeNode() {
+		return firstIncome;
+	}
+	
+	public OutlayNode getOutlayNode() {
+		return firstOutlay;
+	}
+	
 	public String getName() {
 		return name;
 	}

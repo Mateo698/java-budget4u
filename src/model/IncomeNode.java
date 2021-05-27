@@ -80,4 +80,19 @@ public class IncomeNode extends Node implements AddNode,CheckNode{
 		}
 		return list;
 	}
+	
+	public Income searchNode(Income in) {
+		Income searched = null;
+		if(in.getName() == income.getName()) {
+			return income;
+		}else {
+			if(greaterNode != null) {
+				searched = greaterNode.searchNode(in);
+			}
+			if(searched == null && lowerNode != null) {
+				searched = lowerNode.searchNode(in);
+			}
+			return searched;
+		}
+	}
 }
