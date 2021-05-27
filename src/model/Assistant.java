@@ -5,21 +5,14 @@ import java.util.Date;
 
 public class Assistant {
 	ArrayList<User> allUsers;
-	IncomeNode firstIncome;
-	IncomeNode lastIncome;
 	
-	OutlayNode firstOutlay;
-	OutlayNode lastOutlay;
+
 	
 	
 	
 	public Assistant() {
 		allUsers = new ArrayList<User>();
-		firstIncome = null;
-		firstOutlay = null;
 		
-		lastIncome = null;
-		lastOutlay = null;
 	}
 	
 	//------------------------------------------------------  Users code ------------------------------------------------------ 
@@ -69,23 +62,15 @@ public class Assistant {
 	//------------------------------------------------------  Income code ------------------------------------------------------ 
 	
 	//Works as a linked list.
-	public void addIncome(User currentUser, long ammount, String name) {
-		if(firstIncome == null) {
-			String id = "1";
-			Date currentDate = new Date();
-			Income newIncome = new Income(name, ammount, currentDate);
-			
-			IncomeNode newNode = new IncomeNode(id, newIncome);
-			lastIncome = newNode;
-		}else {
-			String id = 1+ (Integer.parseInt(lastIncome.getIdentifier())) + "";
-			Date currentDate = new Date();
-			Income newIncome = new Income(name, ammount, currentDate);
-			
-			IncomeNode newNode = new IncomeNode(id, newIncome);
-			
-			lastIncome = newNode;
+	public void createIncome(User currentUser, long ammount, String name,int type,Date creation, Date monthly) {
+		boolean found = false;
+		for (int i = 0; i < allUsers.size() && !found; i++) {
+			if(allUsers.get(i).getName().equals(currentUser.getName())) {
+				allUsers.get(i).createIncome(name, ammount, type,creation,monthly);
+				found = true;
+			}
 		}
 	}
 	
+
 }

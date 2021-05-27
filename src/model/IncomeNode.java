@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 public class IncomeNode extends Node implements AddNode,CheckNode{
 	private Income income;
 	private IncomeNode greaterNode;
@@ -54,5 +56,28 @@ public class IncomeNode extends Node implements AddNode,CheckNode{
 			lowerNode.addNode(realNode);
 		}
 		
+	}
+	
+	public ArrayList<Income> realIncomes(){
+		ArrayList<Income> list = new ArrayList<>();
+		list.add(income);
+		if(greaterNode != null) {
+			list = greaterNode.realIncomes(list);
+		}
+		if(lowerNode != null) {
+			list = lowerNode.realIncomes(list);
+		}
+		return list;
+	}
+	
+	public ArrayList<Income> realIncomes(ArrayList<Income> list){
+		list.add(income);
+		if(greaterNode != null) {
+			list = greaterNode.realIncomes(list);
+		}
+		if(lowerNode != null) {
+			list = lowerNode.realIncomes(list);
+		}
+		return list;
 	}
 }
