@@ -1,14 +1,25 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Assistant {
 	ArrayList<User> allUsers;
+	IncomeNode firstIncome;
+	IncomeNode lastIncome;
+	
+	OutlayNode firstOutlay;
+	OutlayNode lastOutlay;
 	
 	
 	
 	public Assistant() {
 		allUsers = new ArrayList<User>();
+		firstIncome = null;
+		firstOutlay = null;
+		
+		lastIncome = null;
+		lastOutlay = null;
 	}
 	
 	//------------------------------------------------------  Users code ------------------------------------------------------ 
@@ -54,4 +65,27 @@ public class Assistant {
 		}
 		return founded;
 	}
+	
+	//------------------------------------------------------  Income code ------------------------------------------------------ 
+	
+	//Works as a linked list.
+	public void addIncome(User currentUser, long ammount, String name) {
+		if(firstIncome == null) {
+			String id = "1";
+			Date currentDate = new Date();
+			Income newIncome = new Income(name, ammount, currentDate);
+			
+			IncomeNode newNode = new IncomeNode(id, newIncome);
+			lastIncome = newNode;
+		}else {
+			String id = 1+ (Integer.parseInt(lastIncome.getIdentifier())) + "";
+			Date currentDate = new Date();
+			Income newIncome = new Income(name, ammount, currentDate);
+			
+			IncomeNode newNode = new IncomeNode(id, newIncome);
+			
+			lastIncome = newNode;
+		}
+	}
+	
 }

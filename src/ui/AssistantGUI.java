@@ -60,7 +60,7 @@ public class AssistantGUI {
     		Alert alertWarnings = new Alert(AlertType.WARNING);
 	    	alertWarnings.setTitle("Error");
 			alertWarnings.setHeaderText("Invalid user");
-			alertWarnings.setContentText("Please check yout username/password.");
+			alertWarnings.setContentText("Please check your username/password.");
 			alertWarnings.show();
 			
     	}
@@ -221,7 +221,7 @@ public class AssistantGUI {
 
     }
 
-    //------------------------------------------------------ xxxxx ------------------------------------------------------
+    //------------------------------------------------------ show windows  ------------------------------------------------------
     
     public void start() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
