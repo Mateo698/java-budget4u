@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
@@ -20,8 +21,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Assistant;
+import model.Income;
 import model.TypesOfUser;
 import model.User;
 import threads.TimeThread;
@@ -32,6 +35,8 @@ public class AssistantGUI {
 	private Assistant assistant;
 	
 	private User localUser;
+	private Stage mainStage;
+	private Stage popupStage;
 	
 	public AssistantGUI() {
 		assistant = new Assistant();
@@ -79,7 +84,7 @@ public class AssistantGUI {
     @FXML
     private ComboBox<TypesOfUser> REGISTERTypeOfUser;
 
-    private Stage mainStage;
+    
     
     //private Stage popupStage;
     
@@ -157,23 +162,40 @@ public class AssistantGUI {
     
     //------------------------------------------------------ Incomes List ------------------------------------------------------
     
+    
+    
     @FXML
-    private TableView<?> INCOMELISTlistView;
+    private TableView<Income> INCOMELISTlistView;
 
     @FXML
-    private TableColumn<?, ?> INCOMELISTnameCol;
+    private TableColumn<Income, String> INCOMELISTnameCol;
 
     @FXML
-    private TableColumn<?, ?> INCOMELISTamountCol;
+    private TableColumn<Income, Long> INCOMELISTamountCol;
 
     @FXML
-    private TableColumn<?, ?> INCOMELISTtypeCol;
+    private TableColumn<Income, String> INCOMELISTtypeCol;
 
     @FXML
-    private Button INCOMELISTSsearchBttn;
-
+    private ComboBox<String> INCOMELISTcomboBox;
+    
     @FXML
-    private Button INCOMELISTdeleteBttn;
+    void INCOMELISTSaddBttn(ActionEvent event) throws IOException {
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("AddIncome.fxml"));
+    	loader.setController(this);
+    	Parent root = loader.load();
+    	Scene e = new Scene(root);
+    	popupStage.setScene(e);
+    	popupStage.show();
+    	ADDINCOMEbalanceLabel.setText(localUser.getMoney()+"");
+    	ADDINCOMEinitComboBox();
+    	mainStage.hide();
+    }
+    
+    @FXML
+    void INCOMELISTSsearchBttn(ActionEvent event) {
+
+    }
 
     @FXML
     void INCOMELISTbackBttn(ActionEvent event) {
@@ -181,13 +203,104 @@ public class AssistantGUI {
     }
 
     @FXML
-    void INCOMELISTcomboBox(ActionEvent event) {
+    void INCOMELISTdeleteBttn(ActionEvent event) {
+
+    }
+
+    @FXML
+    void INCOMELISTselectedItem(MouseEvent event) {
 
     }
 
     @FXML
     void INCOMELISTsortBttn(ActionEvent event) {
 
+    }
+    
+  //------------------------------------------------------ Add Income ------------------------------------------------------
+    
+    @FXML
+    private TextField ADDINCOMEnameTxt;
+
+    @FXML
+    private TextField ADDINCOMEamountTxt;
+
+    @FXML
+    private ComboBox<String> ADDINCOMEtypeCb;
+
+    @FXML
+    private Pane ADDINCOMEregularPane;
+
+    @FXML
+    private DatePicker ADDINCOME;
+
+    @FXML
+    private Pane ADDINCOMEloanPane;
+
+    @FXML
+    private Pane ADDINCOMEirregularPane;
+
+    @FXML
+    private Label ADDINCOMEbalanceLabel;
+
+    @FXML
+    void ADDINCOMEcancelBttn(ActionEvent event) {
+    	popupStage.close();
+    	mainStage.show();
+    }
+
+    @FXML
+    void ADDINCOMEdoneBttn(ActionEvent event) {
+    	if(ADDINCOMEcheckFields()) {
+    		String name = ADDINCOMEnameTxt.getText();
+    		long amount = (long) ADDINCOMEamountTxt.getText();
+    	}else {
+    		Alert alert = new Alert(AlertType.WARNING);
+	    	alert.setTitle("Error");
+			alert.setHeaderText("Missing information!");
+			alert.setContentText("Please fill all the fields.");
+			alert.showAndWait();	
+    	}
+    }
+    
+    public boolean ADDINCOMEcheckFields() {
+    	if(ADDINCOMEnameTxt.getText().isEmpty() && ADDINCOMEamountTxt.getText().isEmpty() && ADDINCOMEtypeCb.getSelectionModel().getSelectedItem() == null) {
+    		return false;
+    	}else {
+    		return true;
+    	}
+    }
+    
+    public void ADDINCOMEinitComboBox() {
+    	ADDINCOMEtypeCb.getItems().add("Regular");
+    	ADDINCOMEtypeCb.getItems().add("Irregular");
+    	ADDINCOMEtypeCb.getItems().add("Loan");
+    }
+    
+    @FXML
+    void ADDINCOMEcbSelected(ActionEvent event) {
+    	String selected = ADDINCOMEtypeCb.getSelectionModel().getSelectedItem();
+    	switch (selected) {
+		case "Regular":
+			ADDINCOMEloanPane.setVisible(false);
+			ADDINCOMEirregularPane.setVisible(false);
+			ADDINCOMEregularPane.setVisible(true);
+			break;
+		
+		case "Irregular":
+			ADDINCOMEloanPane.setVisible(false);
+			ADDINCOMEirregularPane.setVisible(true);
+			ADDINCOMEregularPane.setVisible(false);
+			break;
+			
+		case "Loan":
+			ADDINCOMEloanPane.setVisible(true);
+			ADDINCOMEirregularPane.setVisible(false);
+			ADDINCOMEregularPane.setVisible(false);
+			break;
+
+		default:
+		}
     }
     
     //------------------------------------------------------ Outlay List ------------------------------------------------------
@@ -241,6 +354,7 @@ public class AssistantGUI {
     	loader.setController(this);
     	Parent root = loader.load();
     	mainStage = new Stage();
+    	popupStage = new Stage();
     	Scene e = new Scene(root);
     	mainStage.setScene(e);
     	mainStage.show();
