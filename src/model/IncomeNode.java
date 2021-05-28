@@ -50,12 +50,19 @@ public class IncomeNode extends Node implements AddNode,CheckNode{
 	@Override
 	public void addNode(Node n) {
 		IncomeNode realNode = (IncomeNode) n;
-		if(greaterNode.getIncome().getCreationDate().compareTo(realNode.getIncome().getCreationDate()) > 0) {
-			greaterNode.addNode(realNode);
+		if(income.getCreationDate().compareTo(realNode.getIncome().getCreationDate()) > 0){
+			if(greaterNode != null) {
+				greaterNode.addNode(realNode);
+			}else {
+				greaterNode = realNode;
+			}
 		}else {
-			lowerNode.addNode(realNode);
+			if(lowerNode != null) {
+				lowerNode.addNode(realNode);
+			}else {
+				lowerNode = realNode;
+			}
 		}
-		
 	}
 	
 	public ArrayList<Income> realIncomes(){

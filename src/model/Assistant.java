@@ -54,6 +54,18 @@ public class Assistant {
 		return founded;
 	}
 	
+	public User getUser(String name) {
+		User u = null;
+		boolean found = false;
+		for (int i = 0; i < allUsers.size() && !false; i++) {
+			if(allUsers.get(i).getName().equals(name)) {
+				u = allUsers.get(i);
+				found = true;
+			}
+		}
+		return u;
+	}
+	
 	//------------------------------------------------------  Income code ------------------------------------------------------ 
 	
 	//Works as a linked list.

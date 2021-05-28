@@ -4,6 +4,7 @@ import java.util.Date;
 
 public abstract class User {
 	String name, password;
+	long actualMoney;
 	TypesOfUser type;
 	Balance firstBalance;
 	MoneyLender firstMoneyLender;
@@ -16,6 +17,7 @@ public abstract class User {
 		type = utype;
 		firstIncome = null;
 		firstOutlay = null;
+		actualMoney = 0;
 	}
 	
 	public void createIncome(String name, long amount, int type,Date cD, Date monthly) {
@@ -58,4 +60,9 @@ public abstract class User {
 	public TypesOfUser getType() {
 		return type;
 	}
+	
+	public long getMoney() {
+		return actualMoney;
+	}
+	
 }

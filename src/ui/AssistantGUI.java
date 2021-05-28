@@ -23,12 +23,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Assistant;
 import model.TypesOfUser;
+import model.User;
 import threads.TimeThread;
 
 
 public class AssistantGUI {
 	
-	Assistant assistant;
+	private Assistant assistant;
+	
+	private User localUser;
 	
 	public AssistantGUI() {
 		assistant = new Assistant();
@@ -47,6 +50,7 @@ public class AssistantGUI {
     	String username = LOGINUserTxt.getText();
     	String pass = LOGINPasswordTxt.getText();
     	if(assistant.login(username, pass)) {
+    		localUser = assistant.getUser(username);
     		showMainMenu();
     	}else {
     		Alert alertWarnings = new Alert(AlertType.WARNING);
@@ -264,7 +268,8 @@ public class AssistantGUI {
 		Parent mainM = nd.load();
 		changingPane.getChildren().setAll(mainM);
 		time.start();
-		
+		MAINPANEusernameLabel.setText(localUser.getName());
+		MAINMENUbalanceLabel.setText(localUser.getMoney()+"");
     }
     private void showRegister() throws IOException {
     	FXMLLoader x = new FXMLLoader(getClass().getResource("Register.fxml"));
