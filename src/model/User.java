@@ -1,10 +1,11 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public abstract class User {
 	String name, password;
-	long actualMoney;
+	long currentMoney;
 	TypesOfUser type;
 	Balance firstBalance;
 	MoneyLender firstMoneyLender;
@@ -17,7 +18,7 @@ public abstract class User {
 		type = utype;
 		firstIncome = null;
 		firstOutlay = null;
-		actualMoney = 0;
+		currentMoney = 0;
 	}
 	
 	public void createIncome(String name, long amount,Date cD, Date monthly) {
@@ -36,6 +37,24 @@ public abstract class User {
 		//firstIncome;
 	}
 	
+	public ArrayList<Node> toArrayList(Node firstNode) {
+		ArrayList<Node> array = new ArrayList<Node>();
+		Node current = firstNode;
+		boolean finished = false;
+		
+		while(!finished) {
+			if(current != null) {
+				array.add(current);
+				current = current.getNext();
+			}else {
+				finished = true;
+			}
+		}
+		
+		return array;
+	}
+	
+	//------------------------------------- getters ------------------------------
 	public IncomeNode getIncomeNode() {
 		return firstIncome;
 	}
@@ -57,7 +76,7 @@ public abstract class User {
 	}
 	
 	public long getMoney() {
-		return actualMoney;
+		return currentMoney;
 	}
 	
 }
