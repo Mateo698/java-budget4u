@@ -2,6 +2,7 @@ package ui;
 
 import java.io.IOException;
 
+import exceptions.NotOnlyNumberException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,8 +24,11 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import model.Assistant;
 import model.Income;
+import model.MoneyLender;
+
 import model.TypesOfUser;
 import model.User;
 import threads.TimeThread;
@@ -232,16 +236,25 @@ public class AssistantGUI {
     private Pane ADDINCOMEregularPane;
 
     @FXML
-    private DatePicker ADDINCOME;
+    private DatePicker ADDINCOMEdatePickerRegular;
 
     @FXML
     private Pane ADDINCOMEloanPane;
+
+    @FXML
+    private DatePicker ADDINCOMEdatePickerLoan;
+
+    @FXML
+    private ComboBox<MoneyLender> ADDINCOMEmoneyLenderCB;
 
     @FXML
     private Pane ADDINCOMEirregularPane;
 
     @FXML
     private Label ADDINCOMEbalanceLabel;
+
+    
+    
 
     @FXML
     void ADDINCOMEcancelBttn(ActionEvent event) {
@@ -253,13 +266,67 @@ public class AssistantGUI {
     void ADDINCOMEdoneBttn(ActionEvent event) {
     	if(ADDINCOMEcheckFields()) {
     		String name = ADDINCOMEnameTxt.getText();
-    		long amount = (long) ADDINCOMEamountTxt.getText();
+    		try {
+				checkText(ADDINCOMEamountTxt.getText());
+				long amount = Long.parseLong(ADDINCOMEamountTxt.getText());
+				String selected = ADDINCOMEtypeCb.getSelectionModel().getSelectedItem();
+				switch (selected) {
+				case "Regular":
+					
+				break;
+					
+				case "Irregular":
+					
+				break;
+				
+				case "Loan":
+					
+				break;
+
+				default:
+					break;
+				}
+			} catch (NotOnlyNumberException e) {
+				Alert alert = new Alert(AlertType.WARNING);
+		    	alert.setTitle("Error");
+				alert.setHeaderText("Numbers only");
+				alert.setContentText("Please type numbers only in the amount.");
+				alert.showAndWait();
+			}
     	}else {
     		Alert alert = new Alert(AlertType.WARNING);
 	    	alert.setTitle("Error");
 			alert.setHeaderText("Missing information!");
 			alert.setContentText("Please fill all the fields.");
 			alert.showAndWait();	
+    	}
+    }
+    
+    private void ADDINCOMEconvertLenderCB() {
+        ADDINCOMEmoneyLenderCB.setConverter(new StringConverter<MoneyLender>() {
+            @Override
+            public String toString(MoneyLender l) {
+                return l.getName();
+            }
+
+            @Override
+            public MoneyLender fromString(final String string) {
+                return ADDINCOMEmoneyLenderCB.getItems().stream().filter(type -> type.getName().equals(string)).findFirst().orElse(null);
+            }
+        });
+    }
+    
+    public boolean checkText(String text) throws NotOnlyNumberException{
+    	boolean textFound = false;
+    	for (int i = 0; i < text.length(); i++) {
+			if(text.charAt(i) < 48 || text.charAt(i) > 57) {
+				textFound =  true;
+			}
+		}
+    	if(textFound) {
+    		throw new NotOnlyNumberException(text);
+    	}else {
+    		return textFound;
     	}
     }
     
@@ -275,6 +342,7 @@ public class AssistantGUI {
     	ADDINCOMEtypeCb.getItems().add("Regular");
     	ADDINCOMEtypeCb.getItems().add("Irregular");
     	ADDINCOMEtypeCb.getItems().add("Loan");
+    	ADDINCOMEconvertLenderCB();
     }
     
     @FXML

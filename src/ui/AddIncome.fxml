@@ -54,7 +54,7 @@
                         <Font size="20.0" />
                      </font>
                   </Label>
-                  <DatePicker fx:id="ADDINCOME" layoutX="15.0" layoutY="51.0" />
+                  <DatePicker fx:id="ADDINCOMEdatePickerRegular" layoutX="15.0" layoutY="51.0" />
                   <Label layoutX="15.0" layoutY="76.0" prefHeight="67.0" prefWidth="239.0" text="Select the date when you will recieve this income MONTHLY" wrapText="true" />
                </children>
             </Pane>
@@ -66,7 +66,13 @@
                      </font>
                   </Label>
                   <Label layoutX="12.0" layoutY="82.0" text="Select the date when you will pay the Loan" />
-                  <DatePicker layoutX="14.0" layoutY="43.0" />
+                  <DatePicker fx:id="ADDINCOMEdatePickerLoan" layoutX="14.0" layoutY="43.0" />
+                  <Label layoutX="12.0" layoutY="99.0" prefHeight="27.0" prefWidth="160.0" text="Lender">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="ADDINCOMEmoneyLenderCB" layoutX="12.0" layoutY="129.0" prefWidth="150.0" />
                </children>
             </Pane>
             <Pane fx:id="ADDINCOMEirregularPane" layoutX="-7.0" layoutY="267.0" prefHeight="198.0" prefWidth="340.0" visible="false">

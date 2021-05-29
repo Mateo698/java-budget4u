@@ -69,14 +69,22 @@ public class Assistant {
 	//------------------------------------------------------  Income code ------------------------------------------------------ 
 	
 	//Works as a linked list.
-	public void createIncome(User currentUser, long ammount, String name,int type,Date creation, Date monthly) {
+	public void createIncome(User currentUser,String name,long ammount,Date creation, Date monthly) {
 		boolean found = false;
 		for (int i = 0; i < allUsers.size() && !found; i++) {
 			if(allUsers.get(i).getName().equals(currentUser.getName())) {
-				allUsers.get(i).createIncome(name, ammount, type,creation,monthly);
+				allUsers.get(i).createIncome();
 				found = true;
 			}
 		}
+	}
+	
+	public void createIncome(User currentUser, String name, long amount, Date creation, String purpose) {
+		
+	}
+	
+	public void createIncome(User currentUser, String name, long amount, Date creation, MoneyLender lender) {
+		
 	}
 	
 

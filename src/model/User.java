@@ -20,13 +20,8 @@ public abstract class User {
 		actualMoney = 0;
 	}
 	
-	public void createIncome(String name, long amount, int type,Date cD, Date monthly) {
-		switch(type) {
-			case 1://REGULAR
-				RegularIncome income = new RegularIncome(name, amount, cD, monthly);
-				addIncome(income);
-			break;
-		}
+	public void createIncome(String name, long amount,Date cD, Date monthly) {
+		
 	}
 	
 	public void addIncome(Income income) {
