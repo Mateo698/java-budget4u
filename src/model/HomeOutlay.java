@@ -1,12 +1,12 @@
 package model;
 
-import java.util.Date;
+import java.util.Calendar;
 
 public class HomeOutlay extends Outlay{
 	private String type = "HOME";
 	private String category;
 	
-	public HomeOutlay(String n, long a, Date cD, String c) {
+	public HomeOutlay(String n, long a, Calendar cD, String c) {
 		super(n, a, cD);
 		category = c;
 	}

@@ -2,7 +2,7 @@ package exceptions;
 
 public class NotOnlyNumberException extends Exception{
 
-	private final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 	private String text;
 	
 	public NotOnlyNumberException(String t) {

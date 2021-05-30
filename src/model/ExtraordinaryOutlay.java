@@ -1,12 +1,12 @@
 package model;
 
-import java.util.Date;
+import java.util.Calendar;
 
 public class ExtraordinaryOutlay extends Outlay {
 	private String reason;
 	
 
-	public ExtraordinaryOutlay(String n, long a, Date cD,String r) {
+	public ExtraordinaryOutlay(String n, long a, Calendar cD,String r) {
 		super(n, a, cD);
 		setReason(r);
 	}
