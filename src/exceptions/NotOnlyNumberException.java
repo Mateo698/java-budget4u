@@ -12,6 +12,10 @@ public class NotOnlyNumberException extends Exception{
 	public String getText() {
 		return text;
 	}
-
+	
+	public void setText(String t)
+	{
+		text = t;
+	}
 
 }
