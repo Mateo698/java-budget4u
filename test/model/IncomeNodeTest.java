@@ -3,7 +3,9 @@ package model;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.junit.jupiter.api.Test;
 
@@ -13,14 +15,17 @@ class IncomeNodeTest {
 	
 	public void setupScenary1() {
 		Date d = new Date();
-		Income in = new Income("test", 1000, d);
+		Calendar c = new GregorianCalendar();
+		Income in = new Income("test", 1000, c);
 		firstIncomeNode = new IncomeNode("213",in);
 	}
 	
 	public void setupScenary2() {
 		setupScenary1();
-		IrregularIncome inOne = new IrregularIncome("123", 10000, new Date(), "Burguer");
-		IrregularIncome inTwo = new IrregularIncome("132", 1000000, new Date(), "HotDog");
+		Calendar c = new GregorianCalendar();
+		Calendar cc = new GregorianCalendar();
+		IrregularIncome inOne = new IrregularIncome("123", 10000, c, "Burguer");
+		IrregularIncome inTwo = new IrregularIncome("132", 1000000, cc, "HotDog");
 		firstIncomeNode.addNode(new IncomeNode("4234",inOne));
 		firstIncomeNode.addNode(new IncomeNode("43534",inTwo));
 	}
@@ -31,8 +36,8 @@ class IncomeNodeTest {
 	@Test
 	public void test1() {
 		setupScenary1();
-		Date cD = new Date();
-		IrregularIncome newIncome = new IrregularIncome("Burguer", 100000, cD, "Burguer");
+		Calendar c = new GregorianCalendar();
+		IrregularIncome newIncome = new IrregularIncome("Burguer", 100000, c, "Burguer");
 		IncomeNode node = new IncomeNode("1", newIncome);
 		firstIncomeNode.addNode(node);
 		assertTrue(firstIncomeNode.checkNode());
@@ -48,7 +53,7 @@ class IncomeNodeTest {
 	@Test
 	public void test3() {
 		setupScenary1();
-		Date d = new Date();
+		Calendar d = new GregorianCalendar();
 		Income search = new Income("test",1000,d);
 		Income found = firstIncomeNode.searchNode(search);
 		assertTrue(found != null);

@@ -1,7 +1,7 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
 public class Assistant {
 	ArrayList<User> allUsers;
@@ -57,7 +57,7 @@ public class Assistant {
 	public User getUser(String name) {
 		User u = null;
 		boolean found = false;
-		for (int i = 0; i < allUsers.size() && !false; i++) {
+		for (int i = 0; i < allUsers.size() && !found; i++) {
 			if(allUsers.get(i).getName().equals(name)) {
 				u = allUsers.get(i);
 				found = true;
@@ -69,22 +69,16 @@ public class Assistant {
 	//------------------------------------------------------  Income code ------------------------------------------------------ 
 	
 	//Works as a linked list.
-	public void createIncome(User currentUser,String name,long ammount,Date creation, Date monthly) {
-		boolean found = false;
-		for (int i = 0; i < allUsers.size() && !found; i++) {
-			if(allUsers.get(i).getName().equals(currentUser.getName())) {
-				allUsers.get(i).createIncome();
-				found = true;
-			}
-		}
+	public void createIncome(User currentUser,String name,long ammount,Calendar creation, Calendar monthly) {
+		currentUser.createIncome(name, ammount, creation, monthly);
 	}
 	
-	public void createIncome(User currentUser, String name, long amount, Date creation, String purpose) {
-		
+	public void createIncome(User currentUser, String name, long amount, Calendar creation, String purpose) {
+		currentUser.createIncome(name, amount, creation, purpose);
 	}
 	
-	public void createIncome(User currentUser, String name, long amount, Date creation, MoneyLender lender) {
-		
+	public void createIncome(User currentUser, String name, long amount, Calendar creation, MoneyLender lender, Calendar payDay) {
+		currentUser.createIncome(name, amount, creation, lender, payDay);
 	}
 	
 

@@ -1,7 +1,7 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
 public abstract class User {
 	String name, password;
@@ -21,11 +21,23 @@ public abstract class User {
 		currentMoney = 0;
 	}
 	
-	public void createIncome(String name, long amount,Date cD, Date monthly) {
-		
+	public void createIncome(String name, long amount,Calendar cD, Calendar monthly) {
+		RegularIncome in = new RegularIncome(name, amount, cD, monthly);
+		addIncome(in);
+	}
+	
+	public void createIncome(String name, long amount,Calendar cD, String purpose) {
+		IrregularIncome in = new IrregularIncome(name, amount, cD, purpose);
+		addIncome(in);
+	}
+	
+	public void createIncome(String name, long amount,Calendar cD, MoneyLender lender, Calendar payDay) {
+		Loan lo = new Loan(name, amount, cD, payDay, lender);
+		addIncome(lo);
 	}
 	
 	public void addIncome(Income income) {
+		currentMoney += income.getAmount();
 		if(firstIncome == null) {
 			firstIncome = new IncomeNode(income.getName(),income);
 		}else {
@@ -37,21 +49,27 @@ public abstract class User {
 		//firstIncome;
 	}
 	
-	public ArrayList<Node> toArrayList(Node firstNode) {
-		ArrayList<Node> array = new ArrayList<Node>();
-		Node current = firstNode;
-		boolean finished = false;
-		
-		while(!finished) {
-			if(current != null) {
-				array.add(current);
-				current = current.getNext();
-			}else {
-				finished = true;
+	public ArrayList<MoneyLender> getMoneyLenders(){
+		ArrayList<MoneyLender> list = new ArrayList<MoneyLender>();
+		if(firstMoneyLender != null) {
+			list.add(firstMoneyLender);
+			MoneyLender aux = firstMoneyLender.getNext();
+			while(aux != null) {
+				list.add(aux);
+				aux = aux.getNext();
 			}
+			return list;
+		}else {
+			return null;
 		}
-		
-		return array;
+	}
+	
+	public ArrayList<Income> getIncomes(){
+		if(firstIncome != null) {
+			return firstIncome.realIncomes();
+		}else {
+			return null;
+		}
 	}
 	
 	//------------------------------------- getters ------------------------------

@@ -1,21 +1,21 @@
 package model;
 
-import java.util.Date;
+import java.util.Calendar;
 
 public class RegularIncome extends Income{
 	private String type = "REGULAR";
-	private Date monthlyDate;
+	private Calendar monthlyDate;
 	
-	public RegularIncome(String n, long a, Date cD, Date mD) {
+	public RegularIncome(String n, long a, Calendar cD, Calendar mD) {
 		super(n,a,cD);
 		setMonthlyDate(mD);
 	}
 
-	public Date getMonthlyDate() {
+	public Calendar getMonthlyDate() {
 		return monthlyDate;
 	}
 
-	public void setMonthlyDate(Date monthlyDate) {
+	public void setMonthlyDate(Calendar monthlyDate) {
 		this.monthlyDate = monthlyDate;
 	}
 

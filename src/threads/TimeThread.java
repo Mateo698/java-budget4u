@@ -18,6 +18,10 @@ public class TimeThread extends Thread{
 		stop = false;
 	}
 	
+	public void setStop() {
+		stop = true;
+	}
+	
 	@Override
 	public void run() {
 		while(!stop) {

@@ -1,13 +1,13 @@
 package model;
 
-import java.util.Date;
+import java.util.Calendar;
 
 public class Income {
 	private String name;
 	private long amount;
-	private Date creationDate;
+	private Calendar creationDate;
 	
-	public Income(String n, long a, Date cD) {
+	public Income(String n, long a, Calendar cD) {
 		setName(n);
 		setAmount(a);
 		setCreationDate(cD);
@@ -29,11 +29,11 @@ public class Income {
 		this.amount = amount;
 	}
 
-	public Date getCreationDate() {
+	public Calendar getCreationDate() {
 		return creationDate;
 	}
 
-	public void setCreationDate(Date creationDate) {
+	public void setCreationDate(Calendar creationDate) {
 		this.creationDate = creationDate;
 	}
 }

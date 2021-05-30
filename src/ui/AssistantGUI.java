@@ -1,11 +1,15 @@
 package ui;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import exceptions.NotOnlyNumberException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,17 +22,20 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
 import model.Assistant;
 import model.Income;
 import model.MoneyLender;
-
+import model.Outlay;
 import model.TypesOfUser;
 import model.User;
 import threads.TimeThread;
@@ -202,8 +209,8 @@ public class AssistantGUI {
     }
 
     @FXML
-    void INCOMELISTbackBttn(ActionEvent event) {
-
+    void INCOMELISTbackBttn(ActionEvent event) throws IOException {
+    	showMainMenuNoTime();
     }
 
     @FXML
@@ -253,7 +260,8 @@ public class AssistantGUI {
     @FXML
     private Label ADDINCOMEbalanceLabel;
 
-    
+    @FXML
+    private TextArea ADDINCOMEpurposeTxt;
     
 
     @FXML
@@ -263,29 +271,63 @@ public class AssistantGUI {
     }
 
     @FXML
-    void ADDINCOMEdoneBttn(ActionEvent event) {
+    void ADDINCOMEdoneBttn(ActionEvent event) throws IOException {
     	if(ADDINCOMEcheckFields()) {
     		String name = ADDINCOMEnameTxt.getText();
     		try {
 				checkText(ADDINCOMEamountTxt.getText());
 				long amount = Long.parseLong(ADDINCOMEamountTxt.getText());
+				LocalDate current = LocalDate.now();
+				Calendar currentDate = new GregorianCalendar(current.getYear(),current.getMonthValue(),current.getDayOfMonth());
 				String selected = ADDINCOMEtypeCb.getSelectionModel().getSelectedItem();
 				switch (selected) {
 				case "Regular":
+					LocalDate date = ADDINCOMEdatePickerRegular.getValue();
+					Calendar regularDate = new GregorianCalendar(date.getYear(),date.getMonthValue(),date.getDayOfMonth());
+					
+					assistant.createIncome(localUser, name, amount, currentDate, regularDate);
 					
 				break;
 					
 				case "Irregular":
-					
+					String purpose = ADDINCOMEpurposeTxt.getText();
+					if(purpose.isEmpty()) {
+						Alert alert = new Alert(AlertType.WARNING);
+				    	alert.setTitle("Error");
+						alert.setHeaderText("No purpose");
+						alert.setContentText("Please type a purpose of the income.");
+						alert.showAndWait();
+					}else {
+						assistant.createIncome(localUser, name, amount, currentDate, purpose);
+					}
 				break;
 				
 				case "Loan":
-					
+					if(localUser.getMoneyLenders() == null) {
+						Alert alert = new Alert(AlertType.WARNING);
+				    	alert.setTitle("Error");
+						alert.setHeaderText("No money lenders aviable");
+						alert.setContentText("Please add a Money Lender to create a new Loan");
+						alert.showAndWait();
+					}else{
+						MoneyLender lender = ADDINCOMEmoneyLenderCB.getSelectionModel().getSelectedItem();
+						LocalDate d = ADDINCOMEdatePickerLoan.getValue();
+						Calendar c = new GregorianCalendar(d.getYear(),d.getMonthValue(),d.getDayOfMonth());
+						assistant.createIncome(localUser, name, amount, currentDate, lender, c);
+					}
 				break;
 
 				default:
+					Alert alert = new Alert(AlertType.WARNING);
+			    	alert.setTitle("Error");
+					alert.setHeaderText("No type selected");
+					alert.setContentText("Please select a type of income.");
+					alert.showAndWait();
 					break;
 				}
+				popupStage.close();
+				mainStage.show();
+				showIncomeList();
 			} catch (NotOnlyNumberException e) {
 				Alert alert = new Alert(AlertType.WARNING);
 		    	alert.setTitle("Error");
@@ -342,7 +384,11 @@ public class AssistantGUI {
     	ADDINCOMEtypeCb.getItems().add("Regular");
     	ADDINCOMEtypeCb.getItems().add("Irregular");
     	ADDINCOMEtypeCb.getItems().add("Loan");
-    	ADDINCOMEconvertLenderCB();
+    	if(localUser.getMoneyLenders() != null) {
+    		ObservableList<MoneyLender> mLList = FXCollections.observableList(localUser.getMoneyLenders());
+        	ADDINCOMEmoneyLenderCB.getItems().setAll(mLList);
+        	ADDINCOMEconvertLenderCB();
+    	}
     }
     
     @FXML
@@ -362,9 +408,17 @@ public class AssistantGUI {
 			break;
 			
 		case "Loan":
-			ADDINCOMEloanPane.setVisible(true);
-			ADDINCOMEirregularPane.setVisible(false);
-			ADDINCOMEregularPane.setVisible(false);
+			if(localUser.getMoneyLenders() == null) {
+				Alert alert = new Alert(AlertType.WARNING);
+		    	alert.setTitle("Error");
+				alert.setHeaderText("No money lenders aviable");
+				alert.setContentText("Please add a Money Lender to create a new Loan");
+				alert.showAndWait();
+			}else {
+				ADDINCOMEloanPane.setVisible(true);
+				ADDINCOMEirregularPane.setVisible(false);
+				ADDINCOMEregularPane.setVisible(false);
+			}
 			break;
 
 		default:
@@ -374,16 +428,16 @@ public class AssistantGUI {
     //------------------------------------------------------ Outlay List ------------------------------------------------------
     
     @FXML
-    private TableView<?> OUTLAYLISTlistView;
+    private TableView<Outlay> OUTLAYLISTlistView;
 
     @FXML
-    private TableColumn<?, ?> OUTLAYLISTnameCol;
+    private TableColumn<Outlay, String> OUTLAYLISTnameCol;
 
     @FXML
-    private TableColumn<?, ?> OUTLAYLISTamountCol;
+    private TableColumn<Outlay, Long> OUTLAYLISTamountCol;
 
     @FXML
-    private TableColumn<?, ?> OUTLAYLISTtypeCol;
+    private TableColumn<Outlay, String> OUTLAYLISTtypeCol;
 
     @FXML
     void OUTLAYLISTbackBttn(ActionEvent event) {
@@ -428,6 +482,13 @@ public class AssistantGUI {
     	mainStage.show();
 		changingPane = new BorderPane();
 		time = new TimeThread(this);
+		mainStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			
+			@Override
+			public void handle(WindowEvent event) {
+				time.setStop();
+			}
+		});
 	}
     
     private void showLogin() throws IOException {
@@ -437,6 +498,20 @@ public class AssistantGUI {
     	mainStage = new Stage();
     	Scene e = new Scene(root);
     	mainStage.setScene(e);
+    }
+    
+    private void showMainMenuNoTime() throws IOException {
+    	FXMLLoader st = new FXMLLoader(getClass().getResource("MainPane.fxml"));
+		st.setController(this);
+		Parent root = st.load();
+		Scene e = new Scene(root);
+		mainStage.setScene(e);
+		FXMLLoader nd = new FXMLLoader(getClass().getResource("MainMenu.fxml"));
+		nd.setController(this);
+		Parent mainM = nd.load();
+		changingPane.getChildren().setAll(mainM);
+		MAINPANEusernameLabel.setText(localUser.getName());
+		MAINMENUbalanceLabel.setText(localUser.getMoney()+"");
     }
     
     private void showMainMenu() throws IOException {
@@ -470,6 +545,13 @@ public class AssistantGUI {
     	x.setController(this);
     	Parent r = x.load();
     	changingPane.getChildren().setAll(r);
+    	INCOMELISTnameCol.setCellValueFactory(new PropertyValueFactory<Income,String>("name"));
+    	INCOMELISTamountCol.setCellValueFactory(new PropertyValueFactory<Income,Long>("amount"));
+    	INCOMELISTtypeCol.setCellValueFactory(new PropertyValueFactory<Income,String>("type"));
+    	if(localUser.getIncomes() != null) {
+    		ObservableList<Income> incomesList = FXCollections.observableList(localUser.getIncomes());
+    		INCOMELISTlistView.setItems(incomesList);
+    	}
     }
     
     private void showOutlayList() throws IOException {
