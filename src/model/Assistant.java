@@ -81,5 +81,16 @@ public class Assistant {
 		currentUser.createIncome(name, amount, creation, lender, payDay);
 	}
 	
-
+	//------------------------------------------------------  Outlay code ------------------------------------------------------ 
+	
+	//Home,  extraordinary.
+		//Ordinary
+		public void createOutlay(User currentUser,String name,long ammount,Calendar creation, Calendar monthly) {
+			currentUser.createOutlay(name, ammount, creation, monthly);
+		}
+		
+		//Home and extraordinary.
+		public void createOutlay(User currentUser, String name, long amount, Calendar creation, String purpose, int type) {
+			currentUser.createOutlay(name, amount, creation, purpose, type);
+		}
 }
