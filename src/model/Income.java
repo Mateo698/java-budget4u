@@ -2,7 +2,7 @@ package model;
 
 import java.util.Calendar;
 
-public class Income {
+public class Income implements Comparable<Income>{
 	private String name;
 	private long amount;
 	private Calendar creationDate;
@@ -35,5 +35,16 @@ public class Income {
 
 	public void setCreationDate(Calendar creationDate) {
 		this.creationDate = creationDate;
+	}
+	
+	public String getDate() {
+		String realDate = "";
+		realDate = creationDate.get(Calendar.DAY_OF_MONTH) + "/" + creationDate.get(Calendar.MONTH) + "/" + creationDate.get(Calendar.YEAR);
+		return realDate;
+	}
+
+	@Override
+	public int compareTo(Income o) {
+		return creationDate.compareTo(o.getCreationDate());
 	}
 }

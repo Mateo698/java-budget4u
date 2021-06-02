@@ -34,8 +34,11 @@ import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
 import model.Assistant;
 import model.Income;
+import model.IrregularIncome;
+import model.Loan;
 import model.MoneyLender;
 import model.Outlay;
+import model.RegularIncome;
 import model.TypesOfUser;
 import model.User;
 import threads.TimeThread;
@@ -186,6 +189,9 @@ public class AssistantGUI {
 
     @FXML
     private TableColumn<Income, String> INCOMELISTtypeCol;
+    
+    @FXML
+    private TableColumn<Income, String> INCOMELISTdateCol;
 
     @FXML
     private ComboBox<String> INCOMELISTcomboBox;
@@ -204,8 +210,14 @@ public class AssistantGUI {
     }
     
     @FXML
-    void INCOMELISTSsearchBttn(ActionEvent event) {
-
+    void INCOMELISTSsearchBttn(ActionEvent event) throws IOException {
+    	FXMLLoader x = new FXMLLoader(getClass().getResource("SearchIncome.fxml"));
+    	x.setController(this);
+    	Parent root = x.load();
+    	Scene e = new Scene(root);
+    	popupStage.setScene(e);
+    	popupStage.show();
+    	mainStage.hide();
     }
 
     @FXML
@@ -215,17 +227,73 @@ public class AssistantGUI {
 
     @FXML
     void INCOMELISTdeleteBttn(ActionEvent event) {
-
+    	if(INCOMELISTlistView.getSelectionModel().getSelectedItem() == null) {
+    		Alert alert = new Alert(AlertType.WARNING);
+	    	alert.setTitle("Error");
+			alert.setHeaderText("No item selected.");
+			alert.setContentText("Please select an item if you want to delete it.");
+			alert.showAndWait();
+    	}else {
+    		Income delete = INCOMELISTlistView.getSelectionModel().getSelectedItem();
+    		localUser.removeIncome(delete);
+    		ADDINCOMErefreshTable();
+    	}
+    }
+    
+    public void ADDINCOMErefreshTable() {
+    	INCOMELISTnameCol.setCellValueFactory(new PropertyValueFactory<Income,String>("name"));
+    	INCOMELISTamountCol.setCellValueFactory(new PropertyValueFactory<Income,Long>("amount"));
+    	INCOMELISTtypeCol.setCellValueFactory(new PropertyValueFactory<Income,String>("type"));
+    	if(localUser.getIncomes() != null) {
+    		ObservableList<Income> incomesList = FXCollections.observableList(localUser.getIncomes());
+    		INCOMELISTlistView.setItems(incomesList);
+    	}
     }
 
     @FXML
-    void INCOMELISTselectedItem(MouseEvent event) {
-
+    void INCOMELISTselectedItem(MouseEvent event) throws IOException {
+    	if(event.getClickCount() == 2) {
+    		Income selected = INCOMELISTlistView.getSelectionModel().getSelectedItem();
+    		FXMLLoader x = new FXMLLoader(getClass().getResource("EditIncome.fxml"));
+    		x.setController(this);
+    		Parent root = x.load();
+    		Scene e = new Scene(root);
+    		popupStage.setScene(e);
+    		
+    		EDITINCOMEnameTxt.setText(selected.getName());
+    		EDITINCOMEamountTxt.setText(selected.getAmount()+"");
+    		EDITINCOMEcomboBox.getItems().add("Regular");
+    		EDITINCOMEcomboBox.getItems().add("Irregular");
+    		EDITINCOMEcomboBox.getItems().add("Loan");
+    		
+    		if(selected instanceof RegularIncome) {
+    			EDITINCOMEcomboBox.getSelectionModel().select(0);
+    			EDITINCOMEregularPane.setVisible(true);
+    			RegularIncome realIncome = (RegularIncome) selected;
+    			LocalDate date = LocalDate.of(realIncome.getMonthlyDate().get(Calendar.YEAR),realIncome.getMonthlyDate().get(Calendar.MONTH) ,realIncome.getMonthlyDate().get(Calendar.DAY_OF_MONTH));
+    			EDITINCOMEregularDate.setValue(date);
+    		}else if(selected instanceof IrregularIncome) {
+    			EDITINCOMEcomboBox.getSelectionModel().select(1);
+    			EDITINCOMEirregularPane.setVisible(true);
+    			IrregularIncome realIncome = (IrregularIncome) selected;
+    			EDITINCOMEpurposeTxt.setText(realIncome.getPurpose());
+    		}else {
+    			EDITINCOMEcomboBox.getSelectionModel().select(2);
+    			EDITINCOMEloanPane.setVisible(true);
+    			Loan realIncome = (Loan) selected;
+    			LocalDate date = LocalDate.of(realIncome.getPayDate().get(Calendar.YEAR),realIncome.getPayDate().get(Calendar.MONTH), realIncome.getPayDate().get(Calendar.DAY_OF_MONTH));
+    			EDITINCOMEloanDate.setValue(date);
+    		}
+    		
+    		
+    		popupStage.show();
+    		mainStage.hide();
+    	}
     }
 
     @FXML
     void INCOMELISTsortBttn(ActionEvent event) {
-
+    	
     }
     
   //------------------------------------------------------ Add Income ------------------------------------------------------
@@ -424,6 +492,49 @@ public class AssistantGUI {
 		default:
 		}
     }
+    //------------------------------------------------------ Edit Income ------------------------------------------------------
+    @FXML
+    private TextField EDITINCOMEnameTxt;
+
+    @FXML
+    private TextField EDITINCOMEamountTxt;
+
+    @FXML
+    private ComboBox<String> EDITINCOMEcomboBox;
+
+    @FXML
+    private Pane EDITINCOMEregularPane;
+
+    @FXML
+    private DatePicker EDITINCOMEregularDate;
+
+    @FXML
+    private Pane EDITINCOMEloanPane;
+
+    @FXML
+    private DatePicker EDITINCOMEloanDate;
+
+    @FXML
+    private ComboBox<MoneyLender> EDITINCOMElenderCB;
+
+    @FXML
+    private Pane EDITINCOMEirregularPane;
+
+    @FXML
+    private TextArea EDITINCOMEpurposeTxt;
+
+    @FXML
+    private Label EDITINCOMEbalanceLabel;
+
+    @FXML
+    void EDITINCOMEcancelBttn(ActionEvent event) {
+
+    }
+
+    @FXML
+    void EDITINCOMEdoneBttn(ActionEvent event) {
+
+    }
     
     //------------------------------------------------------ Outlay List ------------------------------------------------------
     
@@ -548,6 +659,7 @@ public class AssistantGUI {
     	INCOMELISTnameCol.setCellValueFactory(new PropertyValueFactory<Income,String>("name"));
     	INCOMELISTamountCol.setCellValueFactory(new PropertyValueFactory<Income,Long>("amount"));
     	INCOMELISTtypeCol.setCellValueFactory(new PropertyValueFactory<Income,String>("type"));
+    	INCOMELISTdateCol.setCellValueFactory(new PropertyValueFactory<Income,String>("date"));
     	if(localUser.getIncomes() != null) {
     		ObservableList<Income> incomesList = FXCollections.observableList(localUser.getIncomes());
     		INCOMELISTlistView.setItems(incomesList);

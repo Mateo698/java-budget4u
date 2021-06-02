@@ -2,6 +2,8 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 
 public abstract class User {
 	String name, password;
@@ -44,12 +46,29 @@ public abstract class User {
 		if (firstIncome == null) {
 			firstIncome = new IncomeNode(income.getName(), income);
 		} else {
-			firstIncome.addNode(firstIncome);
+			IncomeNode newNode = new IncomeNode(income.getName(),income);
+			firstIncome.addNode(newNode);
 		}
 	}
 
 	public void removeIncome(Income income) {
-		// firstIncome;
+		ArrayList<Income> realIncomes = getIncomes();
+		if(realIncomes != null) {
+			boolean leave = false;
+			for (int i = 0; i < realIncomes.size() && !leave; i++) {
+				if(realIncomes.get(i) == income) {
+					realIncomes.remove(i);
+					leave = true;
+				}
+			}
+			Collections.sort(realIncomes);
+			IncomeNode newFirst = new IncomeNode(realIncomes.get(0).getName(),realIncomes.get(0));
+			for(int i=1;i<realIncomes.size();i++) {
+				Node newNode = new IncomeNode(realIncomes.get(i).getName(),realIncomes.get(i));
+				newFirst.addNode(newNode);
+			}
+			firstIncome =  newFirst;
+		}
 	}
 
 	// ------------------------------------- Outlay code
