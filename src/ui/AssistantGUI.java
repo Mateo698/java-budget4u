@@ -52,10 +52,12 @@ public class AssistantGUI {
 	private User localUser;
 	private Stage mainStage;
 	private Stage popupStage;
+	private Income editIncomeIndex;
 	
 	public AssistantGUI() {
 		assistant = new Assistant();
 		System.out.println(assistant.createUser("Admin", "123",TypesOfUser.STUDENT));
+		editIncomeIndex = null;
 	}
 	
 	//------------------------------------------------------ Login code ------------------------------------------------------
@@ -255,6 +257,7 @@ public class AssistantGUI {
     void INCOMELISTselectedItem(MouseEvent event) throws IOException {
     	if(event.getClickCount() == 2) {
     		Income selected = INCOMELISTlistView.getSelectionModel().getSelectedItem();
+    		editIncomeIndex = INCOMELISTlistView.getSelectionModel().getSelectedItem();
     		FXMLLoader x = new FXMLLoader(getClass().getResource("EditIncome.fxml"));
     		x.setController(this);
     		Parent root = x.load();
@@ -596,12 +599,19 @@ public class AssistantGUI {
 
     @FXML
     void EDITINCOMEcancelBttn(ActionEvent event) {
-
+    	popupStage.close();
+    	mainStage.show();
     }
 
     @FXML
     void EDITINCOMEdoneBttn(ActionEvent event) {
-
+    	if(editIncomeIndex instanceof RegularIncome) {
+    		
+    	}else if(editIncomeIndex instanceof IrregularIncome) {
+    		
+    	}else {
+    		
+    	}
     }
     
     //------------------------------------------------------ Search Income ------------------------------------------------------
@@ -692,6 +702,13 @@ public class AssistantGUI {
 		changingPane = new BorderPane();
 		time = new TimeThread(this);
 		mainStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			
+			@Override
+			public void handle(WindowEvent event) {
+				time.setStop();
+			}
+		});
+		popupStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			
 			@Override
 			public void handle(WindowEvent event) {

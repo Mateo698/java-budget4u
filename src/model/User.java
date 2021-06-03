@@ -69,6 +69,73 @@ public abstract class User {
 			firstIncome =  newFirst;
 		}
 	}
+	
+	public ArrayList<Income> getIncomes() {
+		if (firstIncome != null) {
+			return firstIncome.realIncomes();
+		} else {
+			return null;
+		}
+	}
+	
+	public ArrayList<Income> getIncomeNameSorted(){
+		ArrayList<Income> list = getIncomes();
+		if(list != null) {
+			 int n = list.size();
+		        for (int i = 0; i < n-1; i++)
+		            for (int j = 0; j < n-i-1; j++)
+		                if (list.get(j).getName().compareTo(list.get(j+1).getName())>=0)
+		                {
+		                    Income temp = list.get(j);
+		                    list.set(j,list.get(j+1));
+		                    list.set(j+1, temp);
+		                }
+		}
+		return list;
+	}
+	
+	public ArrayList<Income> getIncomeAmountSorted(){
+		ArrayList<Income> list = getIncomes();
+		if(list != null) {
+			int n = list.size();
+			for (int i = 0; i < n-1; i++){
+				int min_idx = i;
+				for (int j = i+1; j < n; j++)
+					if (list.get(j).getAmount() < list.get(min_idx).getAmount())
+						min_idx = j;
+				Income temp = list.get(min_idx);
+				list.set(min_idx,list.get(i));
+				list.set(i, temp);
+			}
+		}
+        return list;
+	}
+	
+	public ArrayList<Income> getIncomeDateSorted(){
+		ArrayList<Income> list = getIncomes();
+		try {
+			int n = list.size();
+	        for (int i = 1; i < n; ++i) {
+	            Income key = list.get(i);
+	            int j = i - 1;
+	            while (j >= 0 && list.get(j).getCreationDate().compareTo(key.getCreationDate())>0) {
+	                list.set(j + 1, list.get(j));
+	                j = j - 1;
+	            }
+	            list.set(j+1, key);
+	        }
+	        
+		}catch(NullPointerException n) {
+			
+		}
+		return list;
+	}
+	
+	public void editIncome(Income oldIncome,Income newInc) {
+		if(firstIncome != null) {
+			firstIncome.replace(oldIncome,newInc);
+		}
+	}
 
 	// ------------------------------------- Outlay code
 	// ------------------------------
@@ -173,64 +240,5 @@ public abstract class User {
 		}
 	}
 
-	public ArrayList<Income> getIncomes() {
-		if (firstIncome != null) {
-			return firstIncome.realIncomes();
-		} else {
-			return null;
-		}
-	}
 	
-	public ArrayList<Income> getIncomeNameSorted(){
-		ArrayList<Income> list = getIncomes();
-		if(list != null) {
-			 int n = list.size();
-		        for (int i = 0; i < n-1; i++)
-		            for (int j = 0; j < n-i-1; j++)
-		                if (list.get(j).getName().compareTo(list.get(j+1).getName())>=0)
-		                {
-		                    Income temp = list.get(j);
-		                    list.set(j,list.get(j+1));
-		                    list.set(j+1, temp);
-		                }
-		}
-		return list;
-	}
-	
-	public ArrayList<Income> getIncomeAmountSorted(){
-		ArrayList<Income> list = getIncomes();
-		if(list != null) {
-			int n = list.size();
-			for (int i = 0; i < n-1; i++){
-				int min_idx = i;
-				for (int j = i+1; j < n; j++)
-					if (list.get(j).getAmount() < list.get(min_idx).getAmount())
-						min_idx = j;
-				Income temp = list.get(min_idx);
-				list.set(min_idx,list.get(i));
-				list.set(i, temp);
-			}
-		}
-        return list;
-	}
-	
-	public ArrayList<Income> getIncomeDateSorted(){
-		ArrayList<Income> list = getIncomes();
-		try {
-			int n = list.size();
-	        for (int i = 1; i < n; ++i) {
-	            Income key = list.get(i);
-	            int j = i - 1;
-	            while (j >= 0 && list.get(j).getCreationDate().compareTo(key.getCreationDate())>0) {
-	                list.set(j + 1, list.get(j));
-	                j = j - 1;
-	            }
-	            list.set(j+1, key);
-	        }
-	        
-		}catch(NullPointerException n) {
-			
-		}
-		return list;
-	}
 }

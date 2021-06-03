@@ -106,4 +106,17 @@ public class IncomeNode extends Node implements AddNode,CheckNode{
 			return searched;
 		}
 	}
+	
+	public void replace(Income oldIncome, Income newInc) {
+		if(income == oldIncome) {
+			income = newInc;
+		}else {
+			if(greaterNode != null) {
+				greaterNode.replace(oldIncome, newInc);
+			}
+			if(lowerNode != null) {
+				lowerNode.replace(oldIncome, newInc);
+			}
+		}
+	}
 }
