@@ -2,6 +2,7 @@ package ui;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -293,7 +294,69 @@ public class AssistantGUI {
 
     @FXML
     void INCOMELISTsortBttn(ActionEvent event) {
-    	
+    	if(INCOMELISTcomboBox.getSelectionModel().getSelectedItem() == null) {
+    		Alert alert = new Alert(AlertType.WARNING);
+	    	alert.setTitle("Error");
+			alert.setHeaderText("No sort category selected.");
+			alert.setContentText("Please select a category to sort the list.");
+			alert.showAndWait();
+    	}else {
+    		String selectedCategory = INCOMELISTcomboBox.getSelectionModel().getSelectedItem();
+    		switch (selectedCategory) {
+			case "Name":
+				ArrayList<Income> nameSorted = localUser.getIncomeNameSorted();
+				if(nameSorted != null) {
+					ObservableList<Income> incomesList = FXCollections.observableList(nameSorted);
+		    		INCOMELISTlistView.setItems(incomesList);
+		    		INCOMELISTlistView.refresh();
+				}else {
+					Alert alert = new Alert(AlertType.WARNING);
+			    	alert.setTitle("Error");
+					alert.setHeaderText("No items to be sorted.");
+					alert.setContentText("Please add incomes to be sorted before sorting.");
+					alert.showAndWait();
+				}
+				break;
+
+			case "Amount":
+				ArrayList<Income> amountSorted = localUser.getIncomeAmountSorted();
+				if(amountSorted != null) {
+					ObservableList<Income> incomesList = FXCollections.observableList(amountSorted);
+		    		INCOMELISTlistView.setItems(incomesList);
+		    		INCOMELISTlistView.refresh();
+				}else{
+					Alert alert = new Alert(AlertType.WARNING);
+			    	alert.setTitle("Error");
+			    	alert.setHeaderText("No items to be sorted.");
+					alert.setContentText("Please add incomes to be sorted before sorting.");
+					alert.showAndWait();
+				}
+				break;
+				
+			case "Date":
+				ArrayList<Income> dateSorted = localUser.getIncomeDateSorted();
+				if(dateSorted != null) {
+					ObservableList<Income> incomesList = FXCollections.observableList(dateSorted);
+		    		INCOMELISTlistView.setItems(incomesList);
+		    		INCOMELISTlistView.refresh();
+				}else {
+					Alert alert = new Alert(AlertType.WARNING);
+			    	alert.setTitle("Error");
+			    	alert.setHeaderText("No items to be sorted.");
+					alert.setContentText("Please add incomes to be sorted before sorting.");
+					alert.showAndWait();
+				}
+				break;
+				
+			default:
+				Alert alert = new Alert(AlertType.WARNING);
+		    	alert.setTitle("Error");
+		    	alert.setHeaderText("No category selected.");
+				alert.setContentText("Please select.");
+				alert.showAndWait();
+				break;
+			}
+    	}
     }
     
   //------------------------------------------------------ Add Income ------------------------------------------------------
@@ -348,6 +411,9 @@ public class AssistantGUI {
 				LocalDate current = LocalDate.now();
 				Calendar currentDate = new GregorianCalendar(current.getYear(),current.getMonthValue(),current.getDayOfMonth());
 				String selected = ADDINCOMEtypeCb.getSelectionModel().getSelectedItem();
+				if(selected != null) {
+					
+				}
 				switch (selected) {
 				case "Regular":
 					LocalDate date = ADDINCOMEdatePickerRegular.getValue();
@@ -386,11 +452,7 @@ public class AssistantGUI {
 				break;
 
 				default:
-					Alert alert = new Alert(AlertType.WARNING);
-			    	alert.setTitle("Error");
-					alert.setHeaderText("No type selected");
-					alert.setContentText("Please select a type of income.");
-					alert.showAndWait();
+					
 					break;
 				}
 				popupStage.close();
@@ -401,6 +463,12 @@ public class AssistantGUI {
 		    	alert.setTitle("Error");
 				alert.setHeaderText("Numbers only");
 				alert.setContentText("Please type numbers only in the amount.");
+				alert.showAndWait();
+			} catch (NullPointerException n) {
+				Alert alert = new Alert(AlertType.WARNING);
+		    	alert.setTitle("Error");
+				alert.setHeaderText("No type selected");
+				alert.setContentText("Please select a type of income.");
 				alert.showAndWait();
 			}
     	}else {
@@ -536,6 +604,36 @@ public class AssistantGUI {
 
     }
     
+    //------------------------------------------------------ Search Income ------------------------------------------------------
+    
+    @FXML
+    private TextField SEARCHINCOMEnameTxt;
+
+    @FXML
+    private Button SEARCHINCOMEsearchBttn;
+
+    @FXML
+    private TableView<?> SEARCHINCOMEtable;
+
+    @FXML
+    private TableColumn<?, ?> SEARCHINCOMEnameCol;
+
+    @FXML
+    private TableColumn<?, ?> SEARCHINCOMEamountCol;
+
+    @FXML
+    private TableColumn<?, ?> SEARCHINCOMEtypeCol;
+
+    @FXML
+    void SEARCHINCOMEcancelBttn(ActionEvent event) {
+
+    }
+
+    @FXML
+    void SEARCHINCOMEdoneBttn(ActionEvent event) {
+
+    }
+    
     //------------------------------------------------------ Outlay List ------------------------------------------------------
     
     @FXML
@@ -664,6 +762,9 @@ public class AssistantGUI {
     		ObservableList<Income> incomesList = FXCollections.observableList(localUser.getIncomes());
     		INCOMELISTlistView.setItems(incomesList);
     	}
+    	INCOMELISTcomboBox.getItems().add("Name");
+    	INCOMELISTcomboBox.getItems().add("Amount");
+    	INCOMELISTcomboBox.getItems().add("Date");
     }
     
     private void showOutlayList() throws IOException {
