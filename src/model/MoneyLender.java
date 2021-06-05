@@ -3,16 +3,26 @@ package model;
 public class MoneyLender {
 	MoneyLender nextMoneyLender;
 	
-	String name;
+	String name, lastName, phone;
 	User borrower;
 	
-	public MoneyLender(String name, User borrower) {
+	public MoneyLender(String name, String lastName, String phone, User borrower) {
 		this.name = name;
+		this.lastName = lastName;
+		this.phone = phone;
 		this.borrower = borrower;
 	}
 	
 	public MoneyLender getNext() {
 		return nextMoneyLender;
+	}
+	
+	public String getLastName() {
+		return lastName;
+	}
+	
+	public String getPhone() {
+		return phone;
 	}
 	
 	public void setNext(MoneyLender next) {

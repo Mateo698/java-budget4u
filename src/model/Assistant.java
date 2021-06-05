@@ -82,15 +82,18 @@ public class Assistant {
 	}
 	
 	//------------------------------------------------------  Outlay code ------------------------------------------------------ 
-	
-	//Home,  extraordinary.
-		//Ordinary
-		public void createOutlay(User currentUser,String name,long ammount,Calendar creation, Calendar monthly) {
-			currentUser.createOutlay(name, ammount, creation, monthly);
-		}
+	//Ordinary
+	public void createOutlay(User currentUser,String name,long ammount,Calendar creation, Calendar monthly) {
+		currentUser.createOutlay(name, ammount, creation, monthly);
+	}
 		
-		//Home and extraordinary.
-		public void createOutlay(User currentUser, String name, long amount, Calendar creation, String purpose, int type) {
-			currentUser.createOutlay(name, amount, creation, purpose, type);
-		}
+	//Home and extraordinary.
+	public void createOutlay(User currentUser, String name, long amount, Calendar creation, String purpose, int type) {
+		currentUser.createOutlay(name, amount, creation, purpose, type);
+	}
+	//------------------------------------------------------  MoneyLender code ------------------------------------------------------ 
+	public void createMoneyLender(User currentUser, String name, String lastName, String phone) {
+		currentUser.createMoneyLender(name, lastName, phone, currentUser);
+	}
+		
 }

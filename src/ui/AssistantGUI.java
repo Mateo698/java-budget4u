@@ -688,6 +688,39 @@ public class AssistantGUI {
 
     }
 
+    //------------------------------------------------------ MONEYLENDER ------------------------------------------------------
+    
+    @FXML
+    private TextField MONEYLENDERNameTxt;
+
+    @FXML
+    private TextField MONEYLENDERLastNameTxt;
+
+    @FXML
+    private TextField MONEYLENDERPhoneTxt;
+
+    @FXML
+    void MONEYLENDERRBack(ActionEvent event) throws IOException {
+    	showMainMenu();
+    }
+
+    @FXML
+    void MONEYLENDERCreateLoaner(ActionEvent event) {
+    	String name = MONEYLENDERNameTxt.getText();
+    	String lastName = MONEYLENDERLastNameTxt.getText();
+    	String phone = MONEYLENDERPhoneTxt.getText();
+    	
+    	if(name != "" && lastName != "" && phone != "") {
+    		assistant.createMoneyLender(localUser, name, lastName, phone);
+    	}else {
+    		Alert alert = new Alert(AlertType.ERROR);
+    		alert.setTitle("Error!");
+    		alert.setHeaderText("Missing info");
+    		alert.setContentText("Please fill all the fields.");
+    		alert.showAndWait();
+    	}
+    }
+    
     //------------------------------------------------------ show windows  ------------------------------------------------------
     
     public void start() throws IOException {
@@ -786,6 +819,13 @@ public class AssistantGUI {
     
     private void showOutlayList() throws IOException {
     	FXMLLoader x = new FXMLLoader(getClass().getResource("OutlayList.fxml"));
+    	x.setController(this);
+    	Parent r = x.load();
+    	changingPane.getChildren().setAll(r);
+    }
+    
+    private void showMoneyLender () throws IOException {
+    	FXMLLoader x = new FXMLLoader(getClass().getResource("MoneyLender.fxml"));
     	x.setController(this);
     	Parent r = x.load();
     	changingPane.getChildren().setAll(r);

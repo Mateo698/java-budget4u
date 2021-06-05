@@ -22,8 +22,7 @@ public abstract class User {
 		currentMoney = 0;
 	}
 
-	// ------------------------------------- Income code
-	// ------------------------------
+	// ------------------------------------- Income code ------------------------------
 
 	public void createIncome(String name, long amount, Calendar cD, Calendar monthly) {
 		RegularIncome in = new RegularIncome(name, amount, cD, monthly);
@@ -137,8 +136,7 @@ public abstract class User {
 		}
 	}
 
-	// ------------------------------------- Outlay code
-	// ------------------------------
+	// ------------------------------------- Outlay code ------------------------------
 
 	// Ordinary
 	public void createOutlay(String name, long amount, Calendar cD, Calendar monthly) {
@@ -200,6 +198,23 @@ public abstract class User {
 		}
 	}
 
+	//------------------------------------------------------  Loaner code ------------------------------------------------------ 
+	
+	public void createMoneyLender(String name, String lastName, String phone, User currentUser) {
+		MoneyLender newMoneyLender = new MoneyLender(name, lastName, phone, currentUser);
+		
+		if(firstMoneyLender == null) {
+			firstMoneyLender = newMoneyLender;
+		}else {
+			MoneyLender current = firstMoneyLender;
+			
+			while(current.getNext() != null){
+				current = current.getNext();
+			}			
+			current.setNext(newMoneyLender);
+		}
+	}
+	
 	// ------------------------------------- getters ------------------------------
 	public IncomeNode getIncomeNode() {
 		return firstIncome;
