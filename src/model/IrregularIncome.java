@@ -3,7 +3,7 @@ package model;
 import java.util.Calendar;
 
 public class IrregularIncome extends Income{
-	private String type = "IRREGULAR";
+	private String type = "Irregular";
 	private String purpose;
 	
 	public IrregularIncome(String n, long a, Calendar cD, String p) {

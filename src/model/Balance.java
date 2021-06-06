@@ -1,22 +1,20 @@
 package model;
 
+import java.util.Calendar;
 import java.util.Date;
 
-import org.junit.jupiter.params.shadow.com.univocity.parsers.conversions.CalendarConversion;
-
 public class Balance {
-	Date date = new Date();
-	double income, outlay, loans, total;
-	String balanceDate;
+	private Calendar date;
+	private double income, outlay, loans, total;
+	private String balanceDate;
+	private Balance nextBalance;
 	
-	Balance nextBalance;
-	
-	public Balance(double income, double outlay, double loans) {
+	public Balance(double income, double outlay, double loans, Calendar date) {
 		this.income = income;
 		this.outlay = outlay;
 		this.loans = loans;
-				
-		balanceDate = (date.getYear()+1900) + "-" + (date.getMonth()+1) + "-" + date.getDate() + "-" + date.getHours() + "-" +date.getMinutes();
+		this.date = date;
+		balanceDate = date.get(Calendar.DAY_OF_MONTH) + "/" + date.get(Calendar.MONTH) + "/" + date.get(Calendar.YEAR);
 	}
 	
 	public Balance getNext() {
@@ -25,5 +23,13 @@ public class Balance {
 	
 	public void setNext(Balance next) {
 		nextBalance = next;
+	}
+	
+	public void addBalance(Balance newBalance) {
+		if(nextBalance == null) {
+			nextBalance = newBalance;
+		}else {
+			nextBalance.addBalance(newBalance);
+		}
 	}
 }

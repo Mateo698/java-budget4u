@@ -47,4 +47,5 @@ public class Income implements Comparable<Income>{
 	public int compareTo(Income o) {
 		return creationDate.compareTo(o.getCreationDate());
 	}
+	
 }

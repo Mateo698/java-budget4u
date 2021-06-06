@@ -55,6 +55,8 @@ public abstract class User {
 			boolean leave = false;
 			for (int i = 0; i < realIncomes.size() && !leave; i++) {
 				if(realIncomes.get(i) == income) {
+					long amount = realIncomes.get(i).getAmount();
+					currentMoney -= amount;
 					realIncomes.remove(i);
 					leave = true;
 				}
@@ -131,6 +133,8 @@ public abstract class User {
 	}
 	
 	public void editIncome(Income oldIncome,Income newInc) {
+		currentMoney-= oldIncome.getAmount();
+		currentMoney+= newInc.getAmount();
 		if(firstIncome != null) {
 			firstIncome.replace(oldIncome,newInc);
 		}
@@ -214,6 +218,9 @@ public abstract class User {
 			current.setNext(newMoneyLender);
 		}
 	}
+	//------------------------------------------------------  Balance code ------------------------------------------------------ 
+	
+	
 	
 	// ------------------------------------- getters ------------------------------
 	public IncomeNode getIncomeNode() {

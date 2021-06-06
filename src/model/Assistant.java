@@ -95,5 +95,7 @@ public class Assistant {
 	public void createMoneyLender(User currentUser, String name, String lastName, String phone) {
 		currentUser.createMoneyLender(name, lastName, phone, currentUser);
 	}
+	//------------------------------------------------------  Balance code ------------------------------------------------------ 
 		
+	
 }

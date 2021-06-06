@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 
 import exceptions.NotOnlyNumberException;
@@ -35,6 +36,7 @@ import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
 import model.Assistant;
 import model.Income;
+import model.IncomeNameComparator;
 import model.IrregularIncome;
 import model.Loan;
 import model.MoneyLender;
@@ -219,6 +221,9 @@ public class AssistantGUI {
     	Parent root = x.load();
     	Scene e = new Scene(root);
     	popupStage.setScene(e);
+    	SEARCHINCOMEnameCol.setCellValueFactory(new PropertyValueFactory<Income,String>("name"));
+		SEARCHINCOMEamountCol.setCellValueFactory(new PropertyValueFactory<Income,Long>("amount"));
+		SEARCHINCOMEtypeCol.setCellValueFactory(new PropertyValueFactory<Income,String>("type"));
     	popupStage.show();
     	mainStage.hide();
     }
@@ -266,30 +271,32 @@ public class AssistantGUI {
     		
     		EDITINCOMEnameTxt.setText(selected.getName());
     		EDITINCOMEamountTxt.setText(selected.getAmount()+"");
-    		EDITINCOMEcomboBox.getItems().add("Regular");
-    		EDITINCOMEcomboBox.getItems().add("Irregular");
-    		EDITINCOMEcomboBox.getItems().add("Loan");
+    		
     		
     		if(selected instanceof RegularIncome) {
-    			EDITINCOMEcomboBox.getSelectionModel().select(0);
+    			EDITINCOMEtypeLabel.setText("Regular");
     			EDITINCOMEregularPane.setVisible(true);
     			RegularIncome realIncome = (RegularIncome) selected;
     			LocalDate date = LocalDate.of(realIncome.getMonthlyDate().get(Calendar.YEAR),realIncome.getMonthlyDate().get(Calendar.MONTH) ,realIncome.getMonthlyDate().get(Calendar.DAY_OF_MONTH));
     			EDITINCOMEregularDate.setValue(date);
     		}else if(selected instanceof IrregularIncome) {
-    			EDITINCOMEcomboBox.getSelectionModel().select(1);
+    			EDITINCOMEtypeLabel.setText("Irregular");
     			EDITINCOMEirregularPane.setVisible(true);
     			IrregularIncome realIncome = (IrregularIncome) selected;
     			EDITINCOMEpurposeTxt.setText(realIncome.getPurpose());
     		}else {
-    			EDITINCOMEcomboBox.getSelectionModel().select(2);
+    			EDITINCOMEtypeLabel.setText("Loan");
     			EDITINCOMEloanPane.setVisible(true);
     			Loan realIncome = (Loan) selected;
     			LocalDate date = LocalDate.of(realIncome.getPayDate().get(Calendar.YEAR),realIncome.getPayDate().get(Calendar.MONTH), realIncome.getPayDate().get(Calendar.DAY_OF_MONTH));
     			EDITINCOMEloanDate.setValue(date);
+    			ObservableList<MoneyLender> mLList = FXCollections.observableList(localUser.getMoneyLenders());
+            	ADDINCOMEmoneyLenderCB.getItems().setAll(mLList);
+    			EDITINCOMElenderCB.getItems().setAll(mLList);
+    			EDITINCOMEconvertLenderCB();
     		}
     		
-    		
+    		EDITINCOMEbalanceLabel.setText(localUser.getMoney()+"");
     		popupStage.show();
     		mainStage.hide();
     	}
@@ -569,9 +576,9 @@ public class AssistantGUI {
 
     @FXML
     private TextField EDITINCOMEamountTxt;
-
+    
     @FXML
-    private ComboBox<String> EDITINCOMEcomboBox;
+    private Label EDITINCOMEtypeLabel;
 
     @FXML
     private Pane EDITINCOMEregularPane;
@@ -598,19 +605,66 @@ public class AssistantGUI {
     private Label EDITINCOMEbalanceLabel;
 
     @FXML
-    void EDITINCOMEcancelBttn(ActionEvent event) {
+    public void EDITINCOMEcancelBttn(ActionEvent event) {
     	popupStage.close();
     	mainStage.show();
     }
 
     @FXML
-    void EDITINCOMEdoneBttn(ActionEvent event) {
-    	if(editIncomeIndex instanceof RegularIncome) {
-    		
-    	}else if(editIncomeIndex instanceof IrregularIncome) {
-    		
+    public void EDITINCOMEdoneBttn(ActionEvent event) {
+    	if(EDITINCOMEcheckFields()) {
+    		if(editIncomeIndex instanceof RegularIncome) {
+    			LocalDate d = EDITINCOMEregularDate.getValue();
+    			Calendar c = new GregorianCalendar(d.getYear(),d.getMonthValue(),d.getDayOfMonth());
+    			RegularIncome newRegular = new RegularIncome(EDITINCOMEnameTxt.getText(), Long.parseLong(EDITINCOMEamountTxt.getText()), editIncomeIndex.getCreationDate(), c);
+    			localUser.editIncome(editIncomeIndex, newRegular);
+        	}else if(editIncomeIndex instanceof IrregularIncome) {
+        		IrregularIncome newIr = new IrregularIncome(EDITINCOMEnameTxt.getText(),Long.parseLong(EDITINCOMEamountTxt.getText()) , editIncomeIndex.getCreationDate(), EDITINCOMEpurposeTxt.getText());
+        		localUser.editIncome(editIncomeIndex, newIr);
+        	}else {
+        		LocalDate d = EDITINCOMEloanDate.getValue();
+        		Calendar c = new GregorianCalendar(d.getYear(),d.getMonthValue(),d.getDayOfMonth());
+        		MoneyLender lender = EDITINCOMElenderCB.getSelectionModel().getSelectedItem();
+        		Loan newLoan = new Loan(EDITINCOMEnameTxt.getText(),Long.parseLong(EDITINCOMEamountTxt.getText()),editIncomeIndex.getCreationDate(),c,lender);
+        		localUser.editIncome(editIncomeIndex, newLoan);
+        	}	
     	}else {
-    		
+    		Alert alert = new Alert(AlertType.WARNING);
+	    	alert.setTitle("Error");
+			alert.setHeaderText("Empty fields.");
+			alert.setContentText("Please fill all the fields.");
+			alert.showAndWait();
+    	}
+    }
+    
+    private void EDITINCOMEconvertLenderCB() {
+        EDITINCOMElenderCB.setConverter(new StringConverter<MoneyLender>() {
+            @Override
+            public String toString(MoneyLender l) {
+                return l.getName();
+            }
+
+            @Override
+            public MoneyLender fromString(final String string) {
+                return EDITINCOMElenderCB.getItems().stream().filter(type -> type.getName().equals(string)).findFirst().orElse(null);
+            }
+        });
+    }
+
+    
+    public boolean EDITINCOMEcheckFields() {
+    	if(EDITINCOMEnameTxt.getText().isEmpty() && EDITINCOMEamountTxt.getText().isEmpty()) {
+    		if(editIncomeIndex instanceof IrregularIncome) {
+    			if(EDITINCOMEpurposeTxt.getText().isEmpty()) {
+    				return false;
+    			}else {
+    				return true;
+    			}
+    		}else {
+    			return true;
+    		}
+    	}else {
+    	 return false;	
     	}
     }
     
@@ -619,30 +673,57 @@ public class AssistantGUI {
     @FXML
     private TextField SEARCHINCOMEnameTxt;
 
-    @FXML
-    private Button SEARCHINCOMEsearchBttn;
 
     @FXML
-    private TableView<?> SEARCHINCOMEtable;
+    private TableView<Income> SEARCHINCOMEtable;
 
     @FXML
-    private TableColumn<?, ?> SEARCHINCOMEnameCol;
+    private TableColumn<Income, String> SEARCHINCOMEnameCol;
 
     @FXML
-    private TableColumn<?, ?> SEARCHINCOMEamountCol;
+    private TableColumn<Income, Long> SEARCHINCOMEamountCol;
 
     @FXML
-    private TableColumn<?, ?> SEARCHINCOMEtypeCol;
+    private TableColumn<Income, String> SEARCHINCOMEtypeCol;
 
     @FXML
     void SEARCHINCOMEcancelBttn(ActionEvent event) {
-
+    	
+    }
+    
+    @FXML
+    void SEARCHINCOMEsearchBttn(ActionEvent event) {
+    	ArrayList<Income> list = localUser.getIncomeNameSorted();
+    	if(list != null) {
+    		int index = Collections.binarySearch(list, new Income(SEARCHINCOMEnameTxt.getText(), 0, null),new IncomeNameComparator());
+    		if(index >= 0) {
+    			ArrayList<Income> oneItem = new ArrayList<Income>();
+    			oneItem.add(list.get(index));
+    			ObservableList<Income> incomesList = FXCollections.observableList(oneItem);
+    			SEARCHINCOMEtable.setItems(incomesList);
+    			SEARCHINCOMEtable.refresh();
+    		}else {
+    			Alert alert = new Alert(AlertType.WARNING);
+    			alert.setTitle("Error");
+    			alert.setHeaderText("No income found.");
+    			alert.setContentText("There is not any item with that name.");
+    			alert.showAndWait();
+    		}
+    	}else {
+    		Alert alert = new Alert(AlertType.WARNING);
+	    	alert.setTitle("Error");
+			alert.setHeaderText("No incomes found.");
+			alert.setContentText("There are not any incomes yet.");
+			alert.showAndWait();
+    	}
     }
 
     @FXML
-    void SEARCHINCOMEdoneBttn(ActionEvent event) {
-
+    public void SEARCHINCOMEdoneBttn(ActionEvent event) {
+    	popupStage.close();
+    	mainStage.show();
     }
+    
     
     //------------------------------------------------------ Outlay List ------------------------------------------------------
     

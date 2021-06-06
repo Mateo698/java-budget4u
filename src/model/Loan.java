@@ -3,7 +3,7 @@ package model;
 import java.util.Calendar;
 
 public class Loan extends Income{
-	private String type = "LOAN";
+	private String type = "Loan";
 	private Calendar payDate;
 	private MoneyLender lender;
 	
