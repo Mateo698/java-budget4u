@@ -31,6 +31,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
@@ -44,6 +45,7 @@ import model.Outlay;
 import model.RegularIncome;
 import model.TypesOfUser;
 import model.User;
+import threads.AnimationThread;
 import threads.TimeThread;
 
 
@@ -151,6 +153,10 @@ public class AssistantGUI {
 
     @FXML
     private BorderPane changingPane;
+    
+    @FXML
+    private Circle MAINMENUball;
+
 
     @FXML
     void MAINPANElogOut(ActionEvent event) {
@@ -165,6 +171,8 @@ public class AssistantGUI {
     
     private TimeThread time;
     
+    private AnimationThread ballOne;
+    
     public void MAINPANEupdateTime(String realTime) {
     	MAINPANEhourLabel.setText(realTime);
     }
@@ -177,6 +185,10 @@ public class AssistantGUI {
     @FXML
     void MAINMENUoutlaysBttn(ActionEvent event) throws IOException {
     	showOutlayList();
+    }
+    
+    public void MAINMENUupdateBall(int x) {
+    	MAINMENUball.setLayoutX(x);
     }
     
     //------------------------------------------------------ Incomes List ------------------------------------------------------
@@ -815,11 +827,13 @@ public class AssistantGUI {
     	mainStage.show();
 		changingPane = new BorderPane();
 		time = new TimeThread(this);
+		ballOne = new AnimationThread(20, 349, 349, this);
 		mainStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			
 			@Override
 			public void handle(WindowEvent event) {
 				time.setStop();
+				ballOne.setStop();
 			}
 		});
 		popupStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -827,6 +841,7 @@ public class AssistantGUI {
 			@Override
 			public void handle(WindowEvent event) {
 				time.setStop();
+				ballOne.setStop();
 			}
 		});
 	}
@@ -865,6 +880,7 @@ public class AssistantGUI {
 		Parent mainM = nd.load();
 		changingPane.getChildren().setAll(mainM);
 		time.start();
+		ballOne.start();
 		MAINPANEusernameLabel.setText(localUser.getName());
 		MAINMENUbalanceLabel.setText(localUser.getMoney()+"");
     }
