@@ -5,8 +5,9 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 import javafx.application.Platform;
+import model.ThreadStop;
 
-public class TimeThread extends Thread{
+public class TimeThread extends Thread implements ThreadStop{
 
 	AssistantGUI gui;
 	LocalTime time;

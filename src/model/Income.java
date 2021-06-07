@@ -1,8 +1,11 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
-public class Income implements Comparable<Income>{
+public class Income implements Comparable<Income>,Serializable{
+	
+	private static final long serialVersionUID = 1;
 	private String name;
 	private long amount;
 	private Calendar creationDate;

@@ -220,7 +220,13 @@ public abstract class User {
 	}
 	//------------------------------------------------------  Balance code ------------------------------------------------------ 
 	
-	
+	public ArrayList<Balance> getBalances(){
+		if(firstBalance != null) {
+			return firstBalance.toArrayList();
+		}else {
+			return null;
+		}
+	}
 	
 	// ------------------------------------- getters ------------------------------
 	public IncomeNode getIncomeNode() {

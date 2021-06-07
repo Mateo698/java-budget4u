@@ -1,16 +1,45 @@
 package model;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class Assistant {
+public class Assistant{
+	
 	ArrayList<User> allUsers;
+	private String NAME_FILE = "data/users.ickkck";
 	
 	public Assistant() {
 		allUsers = new ArrayList<User>();		
 	}
 	
 	//------------------------------------------------------  Users code ------------------------------------------------------ 
+	
+	public void saveData() throws IOException {
+		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(NAME_FILE));
+		oos.writeObject(allUsers);
+	    oos.close();
+	}
+	
+	
+	public void loadData() throws FileNotFoundException, IOException, ClassNotFoundException {
+		File f = new File(NAME_FILE);
+	    
+	    if(f.exists()){
+	      ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
+	      allUsers = (ArrayList) ois.readObject();
+	      ois.close();
+	    }
+	    
+	}
+	
 	public boolean createUser(String name, String pass, TypesOfUser type) {
 		boolean created = false;
 		boolean repited = false;

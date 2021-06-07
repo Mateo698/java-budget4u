@@ -1,9 +1,10 @@
 package threads;
 
 import javafx.application.Platform;
+import model.ThreadStop;
 import ui.AssistantGUI;
 
-public class AnimationThread extends Thread{
+public class AnimationThread extends Thread implements ThreadStop{
 	
 	private AssistantGUI gui;
 	private int leftMax,rightMax;
@@ -21,6 +22,7 @@ public class AnimationThread extends Thread{
 		stop = false;
 		figure = option;
 	}
+	
 	
 	public void setStop() {
 		stop = true;

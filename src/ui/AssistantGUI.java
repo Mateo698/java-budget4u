@@ -1,11 +1,14 @@
 package ui;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 
 import exceptions.NotOnlyNumberException;
 import javafx.collections.FXCollections;
@@ -36,6 +39,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
 import model.Assistant;
+import model.Balance;
 import model.Income;
 import model.IncomeNameComparator;
 import model.IrregularIncome;
@@ -57,6 +61,8 @@ public class AssistantGUI {
 	private Stage mainStage;
 	private Stage popupStage;
 	private Income editIncomeIndex;
+	private int[] boundsOne;
+	private int[] boundsTwo;
 	
 	public AssistantGUI() {
 		assistant = new Assistant();
@@ -179,6 +185,11 @@ public class AssistantGUI {
     
     public void MAINPANEupdateTime(String realTime) {
     	MAINPANEhourLabel.setText(realTime);
+    }
+    
+    @FXML
+    void MAINMENUbalanceBttn(ActionEvent event) throws IOException {
+    	showBalanceList();
     }
 
     @FXML
@@ -880,9 +891,63 @@ public class AssistantGUI {
     		alert.showAndWait();
     	}
     }
+    //------------------------------------------------------ BALANCE LIST ------------------------------------------------------
+    
+    @FXML
+    private TableView<Balance> BALANCELISTtable;
+
+    @FXML
+    private TableColumn<Balance, String> BALANCELISTnameCol;
+
+    @FXML
+    private TableColumn<Balance, String> BALANCELISTdateCol;
+
+    @FXML
+    private TableColumn<Balance, Double> BALANCELISTincomesCol;
+
+    @FXML
+    private TableColumn<Balance, Double> BALANCELISToutCol;
+
+    @FXML
+    private TableColumn<Balance, Double> BALANCELISTloanCol;
+
+    @FXML
+    private TableColumn<Balance, Double> BALANCELISTtotalCol;
+
+    @FXML
+    void BALANCELISTbackBttn(ActionEvent event) throws IOException {
+    	showMainMenuNoTime();
+    }
     
     //------------------------------------------------------ SHOW WINDOWS ------------------------------------------------------
     
+    private String fileName = "G:\\Archivos\\Universidad\\2do Semestre\\APO 2\\java-budget4u\\data\\bounds.txt";
+    
+
+    public void importData() throws IOException{
+    	BufferedReader br = new BufferedReader(new FileReader(fileName));
+    	String line = br.readLine();
+    	while(line!=null){
+    		String[] parts = line.split(" ");
+    		int[] bounds = new int[parts.length];
+    		for (int i = 0; i < bounds.length; i++) {
+				bounds[i] = Integer.parseInt(parts[i]);
+			}
+    		
+    		if(boundsOne == null) {
+    			boundsOne = bounds;
+    		}else {
+    			if(boundsTwo == null) {
+    				boundsTwo = bounds;
+    			}else {
+    				System.out.println("Shit");
+    			}
+    		}
+    		line = br.readLine();
+    	}
+    	br.close();
+    }
+
     public void start() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
     	loader.setController(this);
@@ -894,14 +959,20 @@ public class AssistantGUI {
     	mainStage.show();
 		changingPane = new BorderPane();
 		time = new TimeThread(this);
-		ballOne = new AnimationThread(20, 349, 349, this, 1);
-		ballTwo = new AnimationThread(513, 842, 513, this, 2);
+		importData();
+		ballOne = new AnimationThread(boundsOne[0], boundsOne[1], boundsOne[2], this, boundsOne[3]);
+		ballTwo = new AnimationThread(boundsTwo[0], boundsTwo[1], boundsTwo[2], this, boundsTwo[3]);
+		
+		//ballOne = new AnimationThread(20, 349, 349, this, 1);
+		//ballTwo = new AnimationThread(513, 842, 513, this, 2);
+		
 		mainStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			
 			@Override
 			public void handle(WindowEvent event) {
 				time.setStop();
 				ballOne.setStop();
+				ballTwo.setStop();
 			}
 		});
 		popupStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -1012,5 +1083,24 @@ public class AssistantGUI {
     	typesS.add("Home");
     	ObservableList<String> types = FXCollections.observableArrayList(typesS);
     	EDITOUTLAYtype.setItems(types);
+    }
+    
+    private void showBalanceList() throws IOException {
+    	FXMLLoader x = new FXMLLoader(getClass().getResource("BalanceList.fxml"));
+    	x.setController(this);
+    	Parent root = x.load();
+    	changingPane.getChildren().setAll(root);
+    	
+    	BALANCELISTnameCol.setCellValueFactory(new PropertyValueFactory<Balance,String>("name"));
+    	BALANCELISTdateCol.setCellValueFactory(new PropertyValueFactory<Balance,String>("stringDate"));
+    	BALANCELISTincomesCol.setCellValueFactory(new PropertyValueFactory<Balance,Double>("income"));
+    	BALANCELISToutCol.setCellValueFactory(new PropertyValueFactory<Balance,Double>("outlay"));
+    	BALANCELISTloanCol.setCellValueFactory(new PropertyValueFactory<Balance,Double>("loan"));
+    	BALANCELISTtotalCol.setCellValueFactory(new PropertyValueFactory<Balance,Double>("total"));
+    	ArrayList<Balance> balanceList = localUser.getBalances();
+    	if(balanceList != null) {
+    		ObservableList<Balance> obList = FXCollections.observableArrayList(balanceList);
+    		BALANCELISTtable.setItems(obList);
+    	}
     }
 }

@@ -1,8 +1,10 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
-public class Loan extends Income{
+public class Loan extends Income implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private String type = "Loan";
 	private Calendar payDate;
 	private MoneyLender lender;

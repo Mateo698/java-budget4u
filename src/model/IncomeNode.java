@@ -1,8 +1,10 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class IncomeNode extends Node implements AddNode,CheckNode{
+public class IncomeNode extends Node implements AddNode,CheckNode,Serializable{
+	private static final long serialVersionUID = 1;
 	private Income income;
 	private IncomeNode greaterNode;
 	private IncomeNode lowerNode;
