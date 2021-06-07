@@ -10,14 +10,16 @@ public class AnimationThread extends Thread{
 	private int x;
 	private boolean direction;
 	private boolean stop;
+	private int  figure;
 	
-	public AnimationThread(int left,int right,int xPos,AssistantGUI gui) {
+	public AnimationThread(int left,int right,int xPos,AssistantGUI gui, int option) {
 		leftMax = left;
 		rightMax = right;
 		this.gui = gui;
 		x = xPos;
 		direction = false;
 		stop = false;
+		figure = option;
 	}
 	
 	public void setStop() {
@@ -43,13 +45,13 @@ public class AnimationThread extends Thread{
 			Platform.runLater(new Thread() {
 				@Override
 				public void run() {
-					gui.MAINMENUupdateBall(x);;
+					gui.MAINMENUupdateBall(x, figure);;
 				}
 			});
 			try {
 				sleep(10);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}

@@ -64,7 +64,7 @@ public class AssistantGUI {
 		editIncomeIndex = null;
 	}
 	
-	//------------------------------------------------------ Login code ------------------------------------------------------
+	//------------------------------------------------------ LOGIN CODE ------------------------------------------------------
 	@FXML
     private PasswordField LOGINPasswordTxt;
 
@@ -94,7 +94,7 @@ public class AssistantGUI {
     }
     
  
-    //------------------------------------------------------ Register code ------------------------------------------------------
+    //------------------------------------------------------ REGISTER CODE ------------------------------------------------------
     
     @FXML
     private TextField REGISTERUsernameTxt;
@@ -142,7 +142,7 @@ public class AssistantGUI {
     	}
     }
     
-    //------------------------------------------------------ Main Pane/Menu ------------------------------------------------------
+    //------------------------------------------------------MAIN MENU ------------------------------------------------------
     
 
     @FXML
@@ -155,8 +155,10 @@ public class AssistantGUI {
     private BorderPane changingPane;
     
     @FXML
-    private Circle MAINMENUball;
+    private Circle MAINMENUball1;
 
+    @FXML
+    private Circle MAINMENUball2;    
 
     @FXML
     void MAINPANElogOut(ActionEvent event) {
@@ -173,6 +175,8 @@ public class AssistantGUI {
     
     private AnimationThread ballOne;
     
+    private AnimationThread ballTwo;
+    
     public void MAINPANEupdateTime(String realTime) {
     	MAINPANEhourLabel.setText(realTime);
     }
@@ -187,11 +191,16 @@ public class AssistantGUI {
     	showOutlayList();
     }
     
-    public void MAINMENUupdateBall(int x) {
-    	MAINMENUball.setLayoutX(x);
+    public void MAINMENUupdateBall(int x, int figure) {
+    	switch(figure) {
+    		case 1:	MAINMENUball1.setLayoutX(x);
+    			break;
+    		case 2: MAINMENUball2.setLayoutX(x);
+    			break;
+    	}
     }
     
-    //------------------------------------------------------ Incomes List ------------------------------------------------------
+    //------------------------------------------------------ INCOME LIST ------------------------------------------------------
     
     
     
@@ -381,7 +390,7 @@ public class AssistantGUI {
     	}
     }
     
-  //------------------------------------------------------ Add Income ------------------------------------------------------
+  //------------------------------------------------------ ADD INCOME ------------------------------------------------------
     
     @FXML
     private TextField ADDINCOMEnameTxt;
@@ -582,7 +591,7 @@ public class AssistantGUI {
 		default:
 		}
     }
-    //------------------------------------------------------ Edit Income ------------------------------------------------------
+    //------------------------------------------------------ EDIT INCOME ------------------------------------------------------
     @FXML
     private TextField EDITINCOMEnameTxt;
 
@@ -680,7 +689,7 @@ public class AssistantGUI {
     	}
     }
     
-    //------------------------------------------------------ Search Income ------------------------------------------------------
+    //------------------------------------------------------ SEARCH INCOME ------------------------------------------------------
     
     @FXML
     private TextField SEARCHINCOMEnameTxt;
@@ -737,7 +746,7 @@ public class AssistantGUI {
     }
     
     
-    //------------------------------------------------------ Outlay List ------------------------------------------------------
+    //------------------------------------------------------OUTLAY LIST ------------------------------------------------------
     
     @FXML
     private TableView<Outlay> OUTLAYLISTlistView;
@@ -752,13 +761,13 @@ public class AssistantGUI {
     private TableColumn<Outlay, String> OUTLAYLISTtypeCol;
 
     @FXML
-    void OUTLAYLISTbackBttn(ActionEvent event) {
-
+    void OUTLAYLISTbackBttn(ActionEvent event) throws IOException {
+    	showMainMenu();
     }
 
     @FXML
     void OUTLAYLISTdeleteBttn(ActionEvent event) {
-
+    	
     }
     
     @FXML
@@ -779,6 +788,64 @@ public class AssistantGUI {
     @FXML
     void OUTLAYLISTtypeSortCB(ActionEvent event) {
 
+    }
+
+
+    @FXML
+    void OUTLAYLISTaddBttn(ActionEvent event) throws IOException {
+    	showEditOutlay();
+    }
+    
+    //------------------------------------------------------ ADD OUTLAY ------------------------------------------------------
+    
+    @FXML
+    private TextField EDITOUTLAYnameTxt;
+
+    @FXML
+    private TextField EDITOUTLAYamountTxt;
+
+    @FXML
+    private ComboBox<String> EDITOUTLAYtype;
+
+    @FXML
+    private Pane EDITOUTLAYregularPane;
+
+    @FXML
+    private DatePicker EDITOUTLAYregularDate;
+
+    @FXML
+    private Pane EDITOUTLAYirregularPane;
+
+    @FXML
+    private TextArea EDITOUTLAYpurposeTxt;
+
+    @FXML
+    private Label EDITOUTLAYbalanceLabel;
+
+    @FXML
+    void EDITOULATYdoneBttn(ActionEvent event) {
+    	
+    	assistant.createOutlay(localUser, null, 0, null, null);
+    }
+
+    @FXML
+    void EDITOUTLAYcancelBttn(ActionEvent event) throws IOException {
+    	showMainMenu();
+    }
+    
+    @FXML
+    void EDITOUTLAYtypeM(ActionEvent event) {
+    	String selected = EDITOUTLAYtype.getValue();
+    	if(selected.equals("Regular")) {
+    		EDITOUTLAYregularPane.setVisible(true);
+    		EDITOUTLAYirregularPane.setVisible(false);
+    	}else if(selected.equals("Irregular")) {
+    		EDITOUTLAYregularPane.setVisible(false);
+    		EDITOUTLAYirregularPane.setVisible(true);
+    	}else if(selected.equals("Home")){
+    		EDITOUTLAYregularPane.setVisible(true);
+    		EDITOUTLAYirregularPane.setVisible(false);
+    	}
     }
 
     //------------------------------------------------------ MONEYLENDER ------------------------------------------------------
@@ -814,7 +881,7 @@ public class AssistantGUI {
     	}
     }
     
-    //------------------------------------------------------ show windows  ------------------------------------------------------
+    //------------------------------------------------------ SHOW WINDOWS ------------------------------------------------------
     
     public void start() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
@@ -827,7 +894,8 @@ public class AssistantGUI {
     	mainStage.show();
 		changingPane = new BorderPane();
 		time = new TimeThread(this);
-		ballOne = new AnimationThread(20, 349, 349, this);
+		ballOne = new AnimationThread(20, 349, 349, this, 1);
+		ballTwo = new AnimationThread(513, 842, 513, this, 2);
 		mainStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			
 			@Override
@@ -842,6 +910,7 @@ public class AssistantGUI {
 			public void handle(WindowEvent event) {
 				time.setStop();
 				ballOne.setStop();
+				ballTwo.setStop();
 			}
 		});
 	}
@@ -881,6 +950,7 @@ public class AssistantGUI {
 		changingPane.getChildren().setAll(mainM);
 		time.start();
 		ballOne.start();
+		ballTwo.start();
 		MAINPANEusernameLabel.setText(localUser.getName());
 		MAINMENUbalanceLabel.setText(localUser.getMoney()+"");
     }
@@ -921,10 +991,26 @@ public class AssistantGUI {
     	changingPane.getChildren().setAll(r);
     }
     
-    private void showMoneyLender () throws IOException {
+   /*
+    *  private void showMoneyLender () throws IOException {
     	FXMLLoader x = new FXMLLoader(getClass().getResource("MoneyLender.fxml"));
     	x.setController(this);
     	Parent r = x.load();
     	changingPane.getChildren().setAll(r);
+    }
+    */
+    
+    private void showEditOutlay() throws IOException{ 	
+    	FXMLLoader x = new FXMLLoader(getClass().getResource("EditOutlay.fxml"));
+    	x.setController(this);
+    	Parent r = x.load();
+    	changingPane.getChildren().setAll(r);
+    	
+    	ArrayList<String> typesS = new ArrayList<String>();
+    	typesS.add("Regular");
+    	typesS.add("Irregular");
+    	typesS.add("Home");
+    	ObservableList<String> types = FXCollections.observableArrayList(typesS);
+    	EDITOUTLAYtype.setItems(types);
     }
 }
