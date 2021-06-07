@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 
+import exceptions.ExistingUserException;
 import exceptions.NotOnlyNumberException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -113,11 +114,8 @@ public class AssistantGUI {
 
     
     
-    //private Stage popupStage;
-    
-    
     @FXML
-    void REGISTERRegister(ActionEvent event) throws IOException {
+    void REGISTERRegister(ActionEvent event) throws IOException, ExistingUserException {
     	String name = REGISTERUsernameTxt.getText();
     	String pass = REGISTERPasswordTxt.getText();
     	TypesOfUser type = REGISTERTypeOfUser.getValue();
@@ -139,6 +137,7 @@ public class AssistantGUI {
     			alert.showAndWait();	
     			showLogin();
     		}else {
+    			//throw new ExistingUserException();
     			Alert alert = new Alert(AlertType.WARNING);
     			alert.setTitle("Error");
     			alert.setHeaderText("Something went wrong!");
@@ -773,7 +772,7 @@ public class AssistantGUI {
 
     @FXML
     void OUTLAYLISTbackBttn(ActionEvent event) throws IOException {
-    	showMainMenu();
+    	showMainMenuNoTime();
     }
 
     @FXML
@@ -804,58 +803,82 @@ public class AssistantGUI {
 
     @FXML
     void OUTLAYLISTaddBttn(ActionEvent event) throws IOException {
-    	showEditOutlay();
+    	showAddOutlay();
     }
     
     //------------------------------------------------------ ADD OUTLAY ------------------------------------------------------
     
     @FXML
-    private TextField EDITOUTLAYnameTxt;
+    private TextField ADDOUTLAYnameTxt;
 
     @FXML
-    private TextField EDITOUTLAYamountTxt;
+    private TextField ADDOUTLAYamountTxt;
 
     @FXML
-    private ComboBox<String> EDITOUTLAYtype;
+    private ComboBox<String> ADDOUTLAYtype;
 
     @FXML
-    private Pane EDITOUTLAYregularPane;
+    private Pane ADDOUTLAYregularPane;
 
     @FXML
-    private DatePicker EDITOUTLAYregularDate;
+    private DatePicker ADDOUTLAYregularDate;
 
     @FXML
-    private Pane EDITOUTLAYirregularPane;
+    private Pane ADDOUTLAYirregularPane;
 
     @FXML
-    private TextArea EDITOUTLAYpurposeTxt;
+    private TextArea ADDOUTLAYpurposeTxt;
 
     @FXML
-    private Label EDITOUTLAYbalanceLabel;
+    private Label ADDOUTLAYbalanceLabel;
 
     @FXML
-    void EDITOULATYdoneBttn(ActionEvent event) {
+    void ADDOULATYdoneBttn(ActionEvent event) throws NotOnlyNumberException {
+    	String name = ADDOUTLAYnameTxt.getText();
+    	long amount = -1;
+    	amount = Long.parseLong(ADDOUTLAYamountTxt.getText());
     	
-    	assistant.createOutlay(localUser, null, 0, null, null);
+    	String choosed = ADDOUTLAYtype.getValue();
+    	
+    	switch(choosed) {
+    		case "Regular":
+    			break;
+    		
+    		case "Irregular":
+    			break;
+    		
+    		case "Home":
+    			break;
+    	}if(name == "" || amount == -1 || choosed == null) {
+    		Alert alert = new Alert(AlertType.ERROR);
+    		alert.setTitle("Error!");
+    		alert.setHeaderText("Missing information!");
+    		alert.setContentText("Please, fill all the fields.");
+    		alert.showAndWait();
+    	}else {
+    		assistant.createOutlay(localUser, null, 0, null, null);
+    	}
+    	
     }
 
     @FXML
-    void EDITOUTLAYcancelBttn(ActionEvent event) throws IOException {
-    	showMainMenu();
+    void ADDOUTLAYcancelBttn(ActionEvent event) throws IOException {
+    	popupStage.close();
+    	mainStage.show();
     }
     
     @FXML
-    void EDITOUTLAYtypeM(ActionEvent event) {
-    	String selected = EDITOUTLAYtype.getValue();
+    void ADDOUTLAYtypeM(ActionEvent event) {
+    	String selected = ADDOUTLAYtype.getValue();
     	if(selected.equals("Regular")) {
-    		EDITOUTLAYregularPane.setVisible(true);
-    		EDITOUTLAYirregularPane.setVisible(false);
+    		ADDOUTLAYregularPane.setVisible(true);
+    		ADDOUTLAYirregularPane.setVisible(false);
     	}else if(selected.equals("Irregular")) {
-    		EDITOUTLAYregularPane.setVisible(false);
-    		EDITOUTLAYirregularPane.setVisible(true);
+    		ADDOUTLAYregularPane.setVisible(false);
+    		ADDOUTLAYirregularPane.setVisible(true);
     	}else if(selected.equals("Home")){
-    		EDITOUTLAYregularPane.setVisible(true);
-    		EDITOUTLAYirregularPane.setVisible(false);
+    		ADDOUTLAYregularPane.setVisible(true);
+    		ADDOUTLAYirregularPane.setVisible(false);
     	}
     }
 
@@ -959,12 +982,12 @@ public class AssistantGUI {
     	mainStage.show();
 		changingPane = new BorderPane();
 		time = new TimeThread(this);
-		importData();
-		ballOne = new AnimationThread(boundsOne[0], boundsOne[1], boundsOne[2], this, boundsOne[3]);
-		ballTwo = new AnimationThread(boundsTwo[0], boundsTwo[1], boundsTwo[2], this, boundsTwo[3]);
+		//importData();
+		//ballOne = new AnimationThread(boundsOne[0], boundsOne[1], boundsOne[2], this, boundsOne[3]);
+		//ballTwo = new AnimationThread(boundsTwo[0], boundsTwo[1], boundsTwo[2], this, boundsTwo[3]);
 		
-		//ballOne = new AnimationThread(20, 349, 349, this, 1);
-		//ballTwo = new AnimationThread(513, 842, 513, this, 2);
+		ballOne = new AnimationThread(20, 349, 349, this, 1);
+		ballTwo = new AnimationThread(513, 842, 513, this, 2);
 		
 		mainStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			
@@ -1071,18 +1094,21 @@ public class AssistantGUI {
     }
     */
     
-    private void showEditOutlay() throws IOException{ 	
-    	FXMLLoader x = new FXMLLoader(getClass().getResource("EditOutlay.fxml"));
-    	x.setController(this);
-    	Parent r = x.load();
-    	changingPane.getChildren().setAll(r);
+    private void showAddOutlay() throws IOException{ 	
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("AddOutlay.fxml"));
+    	loader.setController(this);
+    	Parent root = loader.load();
+    	Scene e = new Scene(root);
+    	popupStage.setScene(e);
+    	popupStage.show();
+    	mainStage.hide();
     	
     	ArrayList<String> typesS = new ArrayList<String>();
     	typesS.add("Regular");
     	typesS.add("Irregular");
     	typesS.add("Home");
     	ObservableList<String> types = FXCollections.observableArrayList(typesS);
-    	EDITOUTLAYtype.setItems(types);
+    	ADDOUTLAYtype.setItems(types);
     }
     
     private void showBalanceList() throws IOException {

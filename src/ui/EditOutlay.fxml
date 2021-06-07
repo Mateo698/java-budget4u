@@ -18,7 +18,7 @@
    <top>
       <HBox alignment="CENTER" prefHeight="78.0" prefWidth="862.0" style="-fx-background-color: #4da8fc;" BorderPane.alignment="CENTER">
          <children>
-            <Label text="Edit outlays">
+            <Label text="Add outlay">
                <font>
                   <Font name="System Bold" size="38.0" />
                </font>
