@@ -9,11 +9,13 @@ public class Outlay implements Comparable<Outlay>,Serializable{
 	private String name;
 	private long amount;
 	private Calendar creationDate;
+	private String type;
 	
 	public Outlay(String n, long a, Calendar cD) {
 		setName(n);
 		setAmount(-a);
 		setCreationDate(cD);
+		
 	}
 
 	public String getName() {
@@ -49,6 +51,10 @@ public class Outlay implements Comparable<Outlay>,Serializable{
 	@Override
 	public int compareTo(Outlay o) {
 		return creationDate.compareTo(o.getCreationDate());
+	}
+	
+	public String getType() {
+		return type;
 	}
 	
 }

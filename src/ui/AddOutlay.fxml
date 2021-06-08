@@ -119,7 +119,7 @@
                   <Font size="36.0" />
                </font>
             </Label>
-            <Label fx:id="EDITOUTLAYbalanceLabel" text="Balance here">
+            <Label fx:id="ADDOUTLAYbalanceLabel" text="Balance here">
                <font>
                   <Font size="36.0" />
                </font>

@@ -229,7 +229,7 @@ public abstract class User {
 	}
 	
 	public ArrayList<Outlay> getOutlays() {
-		if (firstIncome != null) {
+		if (firstOutlay != null) {
 			return firstOutlay.realOutlays();
 		} else {
 			return null;

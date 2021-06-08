@@ -67,7 +67,7 @@ public class AssistantGUI {
 	
 	public AssistantGUI() {
 		assistant = new Assistant();
-		System.out.println(assistant.createUser("Admin", "123",TypesOfUser.STUDENT));
+		assistant.createUser("Admin", "123",TypesOfUser.STUDENT);
 		editIncomeIndex = null;
 	}
 	
@@ -786,8 +786,20 @@ public class AssistantGUI {
     }
 
     @FXML
-    void OUTLAYLISTselectedItem(MouseEvent event) {
-
+    void OUTLAYLISTselectedItem(MouseEvent event) throws IOException {
+    	Outlay choosed = OUTLAYLISTlistView.getSelectionModel().getSelectedItem();
+    	if(choosed != null) {
+    		String name = choosed.getName();
+    		long value = choosed.getAmount();
+    		String type = choosed.getType();
+    		
+    		showEditOutlay(name, value, type, null, null);
+    	}else {
+    		Alert alert = new Alert(AlertType.WARNING);
+    		alert.setTitle("Warning!");
+    		alert.setHeaderText("Invalid selection");
+    		alert.setContentText("Try again with a valid outlay");
+    	}
     }
 
     @FXML
@@ -908,7 +920,50 @@ public class AssistantGUI {
     		ADDOUTLAYirregularPane.setVisible(false);
     	}
     }
+    
+    //------------------------------------------------------ EDIT OUTLAY ------------------------------------------------------
+    
+    @FXML
+    private TextField EDITOUTLAYnameTxt;
 
+    @FXML
+    private TextField EDITOUTLAYamountTxt;
+
+    @FXML
+    private ComboBox<String> EDITOUTLAYtype;
+
+    @FXML
+    private Pane EDITOUTLAYregularPane;
+
+    @FXML
+    private DatePicker EDITOUTLAYregularDate;
+
+    @FXML
+    private Pane EDITOUTLAYirregularPane;
+
+    @FXML
+    private TextArea EDITOUTLAYpurposeTxt;
+
+    @FXML
+    private Label EDITOUTLAYbalanceLabel;
+
+    @FXML
+    void EDITOULATYdoneBttn(ActionEvent event) {
+
+    }
+
+    @FXML
+    void EDITOUTLAYcancelBttn(ActionEvent event) {
+
+    }
+
+    @FXML
+    void EDITOUTLAYtypeM(ActionEvent event) {
+
+    }
+
+    
+    
     //------------------------------------------------------ MONEYLENDER ------------------------------------------------------
     
     @FXML
@@ -1114,13 +1169,15 @@ public class AssistantGUI {
     }
     
     private void refreshOutlayList() {
-    	if(localUser.getOutlays() != null) {
-    		ObservableList<Outlay> outlays = FXCollections.observableList(localUser.getOutlays());
+        OUTLAYLISTnameCol.setCellValueFactory(new PropertyValueFactory<Outlay, String>("name"));
+        OUTLAYLISTamountCol.setCellValueFactory(new PropertyValueFactory<Outlay, Long>("amount"));
+        OUTLAYLISTtypeCol.setCellValueFactory(new PropertyValueFactory<Outlay, String>("type"));
+        
+        ArrayList<Outlay> outlaysList = localUser.getOutlays();
+        if(outlaysList != null) {
+        	ObservableList<Outlay> outlays = FXCollections.observableArrayList(outlaysList);
         	OUTLAYLISTlistView.setItems(outlays);
-        	OUTLAYLISTnameCol.setCellValueFactory(new PropertyValueFactory<Outlay, String>("name"));
-        	OUTLAYLISTamountCol.setCellValueFactory(new PropertyValueFactory<Outlay, Long>("amount"));
-        	OUTLAYLISTtypeCol.setCellValueFactory(new PropertyValueFactory<Outlay, String>("type"));
-    	}
+        }
     }
    /*
     *  private void showMoneyLender () throws IOException {
@@ -1140,12 +1197,44 @@ public class AssistantGUI {
     	popupStage.show();
     	mainStage.hide();
     	
+    	ADDOUTLAYbalanceLabel.setText(localUser.getMoney() + "");
+    	
+    	
     	ArrayList<String> typesS = new ArrayList<String>();
     	typesS.add("Regular");
     	typesS.add("Irregular");
     	typesS.add("Home");
     	ObservableList<String> types = FXCollections.observableArrayList(typesS);
     	ADDOUTLAYtype.setItems(types);
+    }
+    
+    private void showEditOutlay(String name, long value, String option, Calendar pd, String reason) throws IOException{ 	
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("EditOutlay.fxml"));
+    	loader.setController(this);
+    	Parent root = loader.load();
+    	Scene e = new Scene(root);
+    	popupStage.setScene(e);
+    	popupStage.show();
+    	mainStage.hide();
+    	
+    	EDITOUTLAYbalanceLabel.setText(localUser.getMoney() + "");
+    	
+    	EDITOUTLAYamountTxt.setText(value+"");
+    	EDITOUTLAYnameTxt.setText(name);
+    	if(pd != null) {
+    		//EDITOUTLAYregularDate;
+    		EDITOUTLAYregularPane.setVisible(true);
+    	}else if(reason != null){
+    		EDITOUTLAYirregularPane.setVisible(true);
+    		EDITOUTLAYpurposeTxt.setText(reason);
+    	}
+    	
+    	String choosed = option;
+    	ArrayList <String> type = new ArrayList<String>();
+    	type.add(choosed);
+    	
+    	ObservableList<String> typesO = FXCollections.observableList(type);
+    	EDITOUTLAYtype.setItems(typesO);
     }
     
     private void showBalanceList() throws IOException {
