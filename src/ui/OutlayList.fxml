@@ -46,7 +46,7 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#OUTLAYLISTsearchBttn" text="Search" />
+                  <Button mnemonicParsing="false" onAction="#OUTLAYLISTaddBttn" text="Add" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
@@ -63,7 +63,7 @@
             </VBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#OUTLAYLISTaddBttn" text="Add" />
+                  <Button mnemonicParsing="false" onAction="#OUTLAYLISTsearchBttn" text="Search" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">

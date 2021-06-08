@@ -111,8 +111,9 @@ public class Assistant{
 	}
 	
 	//------------------------------------------------------  Outlay code ------------------------------------------------------ 
+	
 	//Ordinary
-	public void createOutlay(User currentUser,String name,long ammount,Calendar creation, Calendar monthly) {
+	public void createOutlay(User currentUser, String name, long ammount, Calendar creation, Calendar monthly) {
 		currentUser.createOutlay(name, ammount, creation, monthly);
 	}
 		

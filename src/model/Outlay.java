@@ -1,15 +1,18 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
-public class Outlay {
+public class Outlay implements Comparable<Outlay>,Serializable{
+	
+	private static final long serialVersionUID = 1;
 	private String name;
 	private long amount;
 	private Calendar creationDate;
 	
 	public Outlay(String n, long a, Calendar cD) {
 		setName(n);
-		setAmount(a);
+		setAmount(-a);
 		setCreationDate(cD);
 	}
 
@@ -37,5 +40,15 @@ public class Outlay {
 		this.creationDate = creationDate;
 	}
 	
+	public String getDate() {
+		String realDate = "";
+		realDate = creationDate.get(Calendar.DAY_OF_MONTH) + "/" + creationDate.get(Calendar.MONTH) + "/" + creationDate.get(Calendar.YEAR);
+		return realDate;
+	}
+
+	@Override
+	public int compareTo(Outlay o) {
+		return creationDate.compareTo(o.getCreationDate());
+	}
 	
 }

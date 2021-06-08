@@ -835,28 +835,55 @@ public class AssistantGUI {
     @FXML
     void ADDOULATYdoneBttn(ActionEvent event) throws NotOnlyNumberException {
     	String name = ADDOUTLAYnameTxt.getText();
-    	long amount = -1;
-    	amount = Long.parseLong(ADDOUTLAYamountTxt.getText());
     	
-    	String choosed = ADDOUTLAYtype.getValue();
-    	
-    	switch(choosed) {
-    		case "Regular":
-    			break;
-    		
-    		case "Irregular":
-    			break;
-    		
-    		case "Home":
-    			break;
-    	}if(name == "" || amount == -1 || choosed == null) {
+    	try {
+    		checkText(ADDOUTLAYamountTxt.getText());
+    		long amount = Long.parseLong(ADDOUTLAYamountTxt.getText());
+	    	
+	    	LocalDate current = LocalDate.now(); 
+	    	Calendar cd = new GregorianCalendar(current.getYear(), current.getMonthValue(), current.getDayOfMonth());  	
+	    	String choosed = ADDOUTLAYtype.getValue();
+	    	
+	    	LocalDate payDate;
+	    	Calendar pd;
+	    	String reason;
+	    	
+	    	if(name == "" || ADDOUTLAYamountTxt.getText() == "" || choosed == null) {
+	    		Alert alert = new Alert(AlertType.ERROR);
+	    		alert.setTitle("Error!");
+	    		alert.setHeaderText("Missing information!");
+	    		alert.setContentText("Please, fill all the fields.");
+	    		alert.showAndWait();
+	    	}else {   				    	
+		    	switch(choosed) {
+		    		case "Regular":
+		    			if(ADDOUTLAYregularDate.getValue() !=null) {
+		    				payDate = ADDOUTLAYregularDate.getValue();
+			    			pd = new GregorianCalendar(payDate.getYear(), payDate.getMonthValue(), payDate.getDayOfMonth());
+			    			assistant.createOutlay(localUser, name, amount, cd, pd);
+		    			}
+		    			break;
+		    		
+		    		case "Irregular":    			
+		    			reason = ADDOUTLAYpurposeTxt.getText();	
+		    			assistant.createOutlay(localUser, name, amount, cd, reason, 1);
+		    			break;
+		    		
+		    		case "Home":		    			
+		    			reason = ADDOUTLAYpurposeTxt.getText();	
+			    		assistant.createOutlay(localUser, name, amount, cd, reason, 2);
+			    		break;
+		    	}
+	    	}
+	    	popupStage.close();
+	    	mainStage.show();
+	    	refreshOutlayList();
+    	}catch(NotOnlyNumberException e) {
     		Alert alert = new Alert(AlertType.ERROR);
     		alert.setTitle("Error!");
-    		alert.setHeaderText("Missing information!");
-    		alert.setContentText("Please, fill all the fields.");
+    		alert.setHeaderText("Wrong amount");
+    		alert.setContentText("Please fill the amount field only with numbers.");
     		alert.showAndWait();
-    	}else {
-    		assistant.createOutlay(localUser, null, 0, null, null);
     	}
     	
     }
@@ -1083,8 +1110,18 @@ public class AssistantGUI {
     	x.setController(this);
     	Parent r = x.load();
     	changingPane.getChildren().setAll(r);
+    	refreshOutlayList();
     }
     
+    private void refreshOutlayList() {
+    	if(localUser.getOutlays() != null) {
+    		ObservableList<Outlay> outlays = FXCollections.observableList(localUser.getOutlays());
+        	OUTLAYLISTlistView.setItems(outlays);
+        	OUTLAYLISTnameCol.setCellValueFactory(new PropertyValueFactory<Outlay, String>("name"));
+        	OUTLAYLISTamountCol.setCellValueFactory(new PropertyValueFactory<Outlay, Long>("amount"));
+        	OUTLAYLISTtypeCol.setCellValueFactory(new PropertyValueFactory<Outlay, String>("type"));
+    	}
+    }
    /*
     *  private void showMoneyLender () throws IOException {
     	FXMLLoader x = new FXMLLoader(getClass().getResource("MoneyLender.fxml"));

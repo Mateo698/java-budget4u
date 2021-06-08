@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.List;
 
 public abstract class User {
 	String name, password;
@@ -152,13 +153,15 @@ public abstract class User {
 	public void createOutlay(String name, long amount, Calendar cD, String purpose, int type) {
 		switch (type) {
 		case 1:
-			HomeOutlay ho = new HomeOutlay(name, amount, cD, purpose);
-			addOutlay(ho);
-			break;
-		case 2:
 			ExtraordinaryOutlay eo = new ExtraordinaryOutlay(name, amount, cD, purpose);
 			addOutlay(eo);
 			break;
+			
+		case 2:
+			HomeOutlay ho = new HomeOutlay(name, amount, cD, purpose);
+			addOutlay(ho);
+			break;
+		
 		}
 
 	}
@@ -198,10 +201,102 @@ public abstract class User {
 		if (firstOutlay == null) {
 			firstOutlay = new OutlayNode(outlay.getName(), outlay);
 		} else {
-			firstOutlay.addNode(firstOutlay);
+			OutlayNode newNode = new OutlayNode(outlay.getName(), outlay);
+			firstOutlay.addNode(newNode);
 		}
 	}
 
+	public void removeOutlay(Outlay outlay) {
+		ArrayList<Outlay> realOutlays = getOutlays();
+		if(realOutlays != null) {
+			boolean leave = false;
+			for (int i = 0; i < realOutlays.size() && !leave; i++) {
+				if(realOutlays.get(i) == outlay) {
+					long amount = realOutlays.get(i).getAmount();
+					currentMoney -= amount;
+					realOutlays.remove(i);
+					leave = true;
+				}
+			}
+			Collections.sort(realOutlays);
+			OutlayNode newFirst = new OutlayNode(realOutlays.get(0).getName(),realOutlays.get(0));
+			for(int i=1;i<realOutlays.size();i++) {
+				Node newNode = new OutlayNode(realOutlays.get(i).getName(),realOutlays.get(i));
+				newFirst.addNode(newNode);
+			}
+			firstOutlay =  newFirst;
+		}
+	}
+	
+	public ArrayList<Outlay> getOutlays() {
+		if (firstIncome != null) {
+			return firstOutlay.realOutlays();
+		} else {
+			return null;
+		}
+	}
+	
+	public ArrayList<Outlay> getOutlayNameSorted(){
+		ArrayList<Outlay> list = getOutlays();
+		if(list != null) {
+			 int n = list.size();
+		        for (int i = 0; i < n-1; i++)
+		            for (int j = 0; j < n-i-1; j++)
+		                if (list.get(j).getName().compareTo(list.get(j+1).getName())>=0)
+		                {
+		                	Outlay temp = list.get(j);
+		                    list.set(j,list.get(j+1));
+		                    list.set(j+1, temp);
+		                }
+		}
+		return list;
+	}
+	
+	public ArrayList<Outlay> getOutlayAmountSorted(){
+		ArrayList<Outlay> list = getOutlays();
+		if(list != null) {
+			int n = list.size();
+			for (int i = 0; i < n-1; i++){
+				int min_idx = i;
+				for (int j = i+1; j < n; j++)
+					if (list.get(j).getAmount() < list.get(min_idx).getAmount())
+						min_idx = j;
+				Outlay temp = list.get(min_idx);
+				list.set(min_idx,list.get(i));
+				list.set(i, temp);
+			}
+		}
+        return list;
+	}
+	
+	public ArrayList<Outlay> getOutlayDateSorted(){
+		ArrayList<Outlay> list = getOutlays();
+		try {
+			int n = list.size();
+	        for (int i = 1; i < n; ++i) {
+	        	Outlay key = list.get(i);
+	            int j = i - 1;
+	            while (j >= 0 && list.get(j).getCreationDate().compareTo(key.getCreationDate())>0) {
+	                list.set(j + 1, list.get(j));
+	                j = j - 1;
+	            }
+	            list.set(j+1, key);
+	        }
+	        
+		}catch(NullPointerException n) {
+			
+		}
+		return list;
+	}
+	
+	public void editOutlay(Outlay oldOutlay, Outlay newOut) {
+		currentMoney-= oldOutlay.getAmount();
+		currentMoney+= newOut.getAmount();
+		if(firstOutlay != null) {
+			firstOutlay.replace(oldOutlay,newOut);
+		}
+	}
+	
 	//------------------------------------------------------  Loaner code ------------------------------------------------------ 
 	
 	public void createMoneyLender(String name, String lastName, String phone, User currentUser) {
