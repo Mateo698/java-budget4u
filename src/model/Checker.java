@@ -18,7 +18,7 @@ public class Checker implements Serializable{
 	
 	
 
-	public void checkIncomes(Calendar c) {
+	public long checkIncomes(Calendar c) {
 		long amount = 0;
 		for (int i = 0; i < incomesCheck.size(); i++) {
 			if(incomesCheck.get(i).getIncome().getMonthlyDate().get(Calendar.DAY_OF_MONTH) <= c.get(Calendar.DAY_OF_MONTH) && !incomesCheck.get(i).isChecked()) {
@@ -26,7 +26,19 @@ public class Checker implements Serializable{
 				incomesCheck.get(i).setChecked();
 			}
 		}
+	
+		return amount;
+	}
+	
+	public long checkOutlays(Calendar c) {
+		long amount = 0;
+		for (int i = 0; i < outlaysCheck.size(); i++) {
+			if(outlaysCheck.get(i).getOutlay().getDiscountDate().get(Calendar.DAY_OF_WEEK) <= c.get(Calendar.DAY_OF_WEEK) && !outlaysCheck.get(i).isChecked()) {
+				amount -= outlaysCheck.get(i).getOutlay().getAmount();
+			}
+		}
 		
+		return amount;
 	}
 	
 	//checkLoans

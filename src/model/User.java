@@ -378,6 +378,13 @@ public abstract class User {
 			return null;
 		}
 	}
-
+	
+	public void dailyCheck(Calendar today) {
+		if(today.get(Calendar.DAY_OF_MONTH) == 1)
+		currentMoney += regularChecker.checkIncomes(today);
+		currentMoney -= regularChecker.checkOutlays(today);
+	}
+	
+	
 	
 }

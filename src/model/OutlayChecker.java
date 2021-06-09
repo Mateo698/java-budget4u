@@ -13,7 +13,7 @@ public class OutlayChecker implements Serializable{
 		checked = false;;
 	}
 
-	public Outlay getOutlay() {
+	public OrdinaryOutlay getOutlay() {
 		return outlay;
 	}
 

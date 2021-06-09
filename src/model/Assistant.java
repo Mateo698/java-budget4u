@@ -126,6 +126,7 @@ public class Assistant{
 		currentUser.createMoneyLender(name, lastName, phone, currentUser);
 	}
 	//------------------------------------------------------  Balance code ------------------------------------------------------ 
-		
+	
+	
 	
 }
