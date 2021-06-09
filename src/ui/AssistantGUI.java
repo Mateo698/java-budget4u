@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
-
 import exceptions.ExistingUserException;
 import exceptions.NotOnlyNumberException;
 import javafx.collections.FXCollections;
@@ -1026,7 +1024,7 @@ public class AssistantGUI {
     
     //------------------------------------------------------ SHOW WINDOWS ------------------------------------------------------
     
-    private String fileName = "G:\\Archivos\\Universidad\\2do Semestre\\APO 2\\java-budget4u\\data\\bounds.txt";
+    private String fileName = "data/bounds.txt";
     
 
     public void importData() throws IOException{
@@ -1064,12 +1062,12 @@ public class AssistantGUI {
     	mainStage.show();
 		changingPane = new BorderPane();
 		time = new TimeThread(this);
-		//importData();
-		//ballOne = new AnimationThread(boundsOne[0], boundsOne[1], boundsOne[2], this, boundsOne[3]);
-		//ballTwo = new AnimationThread(boundsTwo[0], boundsTwo[1], boundsTwo[2], this, boundsTwo[3]);
+		importData();
+		ballOne = new AnimationThread(boundsOne[0], boundsOne[1], boundsOne[2], this, boundsOne[3]);
+		ballTwo = new AnimationThread(boundsTwo[0], boundsTwo[1], boundsTwo[2], this, boundsTwo[3]);
 		
-		ballOne = new AnimationThread(20, 349, 349, this, 1);
-		ballTwo = new AnimationThread(513, 842, 513, this, 2);
+		//ballOne = new AnimationThread(20, 349, 349, this, 1);
+		//ballTwo = new AnimationThread(513, 842, 513, this, 2);
 		
 		mainStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			

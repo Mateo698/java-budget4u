@@ -3,7 +3,6 @@ package model;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.List;
 
 public abstract class User {
 	String name, password;
@@ -13,6 +12,7 @@ public abstract class User {
 	MoneyLender firstMoneyLender;
 	IncomeNode firstIncome;
 	OutlayNode firstOutlay;
+	Checker regularChecker;
 
 	public User(String uname, String upass, TypesOfUser utype) {
 		name = uname;
@@ -21,12 +21,14 @@ public abstract class User {
 		firstIncome = null;
 		firstOutlay = null;
 		currentMoney = 0;
+		regularChecker = new Checker();
 	}
 
 	// ------------------------------------- Income code ------------------------------
 
 	public void createIncome(String name, long amount, Calendar cD, Calendar monthly) {
 		RegularIncome in = new RegularIncome(name, amount, cD, monthly);
+		regularChecker.addIncomeChecker(new IncomeChecker(in));
 		addIncome(in);
 	}
 
@@ -36,7 +38,7 @@ public abstract class User {
 	}
 
 	public void createIncome(String name, long amount, Calendar cD, MoneyLender lender, Calendar payDay) {
-		Loan lo = new Loan(name, amount, cD, payDay, lender);
+		Loan lo = new Loan(name, amount, cD, payDay, lender); 
 		addIncome(lo);
 	}
 
@@ -69,6 +71,13 @@ public abstract class User {
 				newFirst.addNode(newNode);
 			}
 			firstIncome =  newFirst;
+		}
+		if(income instanceof RegularIncome) {
+			RegularIncome in = (RegularIncome) income;
+			regularChecker.removeIncome(in);
+		}else if(income instanceof Loan) {
+			Loan l = (Loan) income;
+			//regularChecker.removeLoan();
 		}
 	}
 	
@@ -138,6 +147,13 @@ public abstract class User {
 		currentMoney+= newInc.getAmount();
 		if(firstIncome != null) {
 			firstIncome.replace(oldIncome,newInc);
+		}
+		if(oldIncome instanceof RegularIncome) {
+			RegularIncome oldIn = (RegularIncome) oldIncome;
+			RegularIncome newIn = (RegularIncome) newInc;
+			regularChecker.editIncome(oldIn,newIn);
+		}else if(oldIncome instanceof Loan) {
+			
 		}
 	}
 

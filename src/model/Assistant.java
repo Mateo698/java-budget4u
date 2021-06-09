@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -29,6 +28,7 @@ public class Assistant{
 	}
 	
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void loadData() throws FileNotFoundException, IOException, ClassNotFoundException {
 		File f = new File(NAME_FILE);
 	    

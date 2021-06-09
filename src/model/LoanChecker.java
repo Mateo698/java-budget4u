@@ -1,6 +1,10 @@
 package model;
 
-public class LoanChecker {
+import java.io.Serializable;
+
+public class LoanChecker implements Serializable{
+	
+	private static final long serialVersionUID = 1;
 	private Loan loan;
 	private boolean checked;
 	

@@ -1,6 +1,10 @@
 package model;
 
-public class IncomeChecker {
+import java.io.Serializable;
+
+public class IncomeChecker implements Serializable{
+	
+	private static final long serialVersionUID = 1;
 	private RegularIncome income;
 	private boolean checked;
 	

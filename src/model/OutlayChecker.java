@@ -1,6 +1,10 @@
 package model;
 
-public class OutlayChecker {
+import java.io.Serializable;
+
+public class OutlayChecker implements Serializable{
+	
+	private static final long serialVersionUID = 1;
 	private OrdinaryOutlay outlay;
 	private boolean checked;
 	
