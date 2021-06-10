@@ -39,11 +39,14 @@ import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
 import model.Assistant;
 import model.Balance;
+import model.ExtraordinaryOutlay;
+import model.HomeOutlay;
 import model.Income;
 import model.IncomeNameComparator;
 import model.IrregularIncome;
 import model.Loan;
 import model.MoneyLender;
+import model.OrdinaryOutlay;
 import model.Outlay;
 import model.RegularIncome;
 import model.TypesOfUser;
@@ -60,6 +63,7 @@ public class AssistantGUI {
 	private Stage mainStage;
 	private Stage popupStage;
 	private Income editIncomeIndex;
+	private Outlay editOutlayIndex;
 	private int[] boundsOne;
 	private int[] boundsTwo;
 	
@@ -145,7 +149,7 @@ public class AssistantGUI {
     	}
     }
     
-    //------------------------------------------------------MAIN MENU ------------------------------------------------------
+    //------------------------------------------------------ MAIN MENU ------------------------------------------------------
     
 
     @FXML
@@ -826,7 +830,9 @@ public class AssistantGUI {
     @FXML
     void OUTLAYLISTselectedItem(MouseEvent event) throws IOException {
     	Outlay choosed = OUTLAYLISTlistView.getSelectionModel().getSelectedItem();
+    	
     	if(choosed != null) {
+    		editOutlayIndex = choosed;
     		String name = choosed.getName();
     		long value = choosed.getAmount();
     		String type = choosed.getType();
@@ -954,8 +960,8 @@ public class AssistantGUI {
     		ADDOUTLAYregularPane.setVisible(false);
     		ADDOUTLAYirregularPane.setVisible(true);
     	}else if(selected.equals("Home")){
-    		ADDOUTLAYregularPane.setVisible(true);
-    		ADDOUTLAYirregularPane.setVisible(false);
+    		ADDOUTLAYregularPane.setVisible(false);
+    		ADDOUTLAYirregularPane.setVisible(true);
     	}
     }
     
@@ -986,18 +992,61 @@ public class AssistantGUI {
     private Label EDITOUTLAYbalanceLabel;
 
     @FXML
-    void EDITOULATYdoneBttn(ActionEvent event) {
+    void EDITOULATYdoneBttn(ActionEvent event){
+    	boolean filled = false;
+    	
+    	String newName = EDITOUTLAYnameTxt.getText();
+    	String type = EDITOUTLAYtype.getValue();
+    	String valueS = EDITOUTLAYamountTxt.getText();
+    	String purpose = EDITOUTLAYpurposeTxt.getText();
+    	Calendar pD = null;
+    	
+    	if(newName != "" && type != "" && valueS != "") {
+    		if(EDITOUTLAYirregularPane.isVisible() && EDITOUTLAYpurposeTxt.getText() != "") {
+    			filled = true;
+    		}else if(EDITOUTLAYregularPane.isVisible()){
+    			LocalDate date = EDITOUTLAYregularDate.getValue();
+    			pD = new GregorianCalendar(date.getDayOfYear(), date.getMonthValue(), date.getYear()); 
+    			filled = true;
+    		}
 
+    	if(filled) {
+    		
+    		Calendar cD = editOutlayIndex.getCreationDate();
+    		Outlay newOutlay;
+    		
+	    	long amount = Long.parseLong(EDITOUTLAYamountTxt.getText());
+			if(editOutlayIndex instanceof OrdinaryOutlay) {
+				newOutlay = new OrdinaryOutlay(newName, amount, cD, pD);
+			}else if(editOutlayIndex instanceof ExtraordinaryOutlay) {
+				newOutlay = new ExtraordinaryOutlay(newName, amount, cD, purpose);
+			}else {
+				newOutlay = new HomeOutlay(newName, amount, cD, purpose);
+			}
+			
+			localUser.editOutlay(editOutlayIndex, newOutlay);
+			popupStage.close();
+			refreshOutlayList();
+			mainStage.show();
+	    	}else {
+	    		Alert alert = new Alert(AlertType.WARNING);
+		    	alert.setTitle("Error");
+				alert.setHeaderText("Empty fields.");
+				alert.setContentText("Please fill all the fields.");
+				alert.showAndWait();
+	    	}
+    	}
     }
 
     @FXML
     void EDITOUTLAYcancelBttn(ActionEvent event) {
-
+    	popupStage.close();
+    	mainStage.show();
     }
 
     @FXML
     void EDITOUTLAYtypeM(ActionEvent event) {
-
+    	
     }
 
     
@@ -1274,7 +1323,7 @@ public class AssistantGUI {
     	
     	EDITOUTLAYbalanceLabel.setText(localUser.getMoney() + "");
     	
-    	EDITOUTLAYamountTxt.setText(value+"");
+    	EDITOUTLAYamountTxt.setText((value+"").substring(1));
     	EDITOUTLAYnameTxt.setText(name);
     	if(pd != null) {
     		//EDITOUTLAYregularDate;
@@ -1285,11 +1334,15 @@ public class AssistantGUI {
     	}
     	
     	String choosed = option;
-    	ArrayList <String> type = new ArrayList<String>();
-    	type.add(choosed);
+    	EDITOUTLAYtype.setValue(choosed);
     	
-    	ObservableList<String> typesO = FXCollections.observableList(type);
-    	EDITOUTLAYtype.setItems(typesO);
+    	if(choosed.equalsIgnoreCase("Regular")) {
+    		EDITOUTLAYirregularPane.setVisible(false);
+    		EDITOUTLAYregularPane.setVisible(true);
+    	}else {
+    		EDITOUTLAYregularPane.setVisible(false);
+    		EDITOUTLAYirregularPane.setVisible(true);
+    	}
     }
     
     private void showBalanceList() throws IOException {

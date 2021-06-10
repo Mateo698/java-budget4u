@@ -41,7 +41,7 @@ public class Checker implements Serializable{
 		return amount;
 	}
 	
-	//checkLoans
+	//------------------------------------------------------------------- CHECK LOANS ----------------------------------------------------
 	public long checkLoans(Calendar c) {
 		long amount = 0;
 		for (int i = 0; i < loansCheck.size(); i++) {
@@ -112,6 +112,16 @@ public class Checker implements Serializable{
 		}
 	}
 	
+	public void removeOutlay(OrdinaryOutlay outlay) {
+		boolean end = false;
+		for (int i = 0; i < outlaysCheck.size() && !end; i++) {
+			if(outlaysCheck.get(i).getOutlay() == outlay) {
+				outlaysCheck.remove(i);
+				end = true;
+			}
+		}
+	}
+	
 	public void removeLoan(Loan loan) {
 		boolean end = false;
 		for (int i = 0; i < loansCheck.size() && !end; i++) {
@@ -127,6 +137,16 @@ public class Checker implements Serializable{
 		for (int i = 0; i < incomesCheck.size() && !end; i++) {
 			if(incomesCheck.get(i).getIncome() == oldIn) {
 				incomesCheck.get(i).setIncome(newIn);
+				end = true;
+			}
+		}
+	}
+	
+	public void editOutlay(OrdinaryOutlay oldOut, OrdinaryOutlay newOut) {
+		boolean end = false;
+		for (int i = 0; i < incomesCheck.size() && !end; i++) {
+			if(outlaysCheck.get(i).getOutlay() == oldOut) {
+				outlaysCheck.get(i).setOutlay(newOut);
 				end = true;
 			}
 		}

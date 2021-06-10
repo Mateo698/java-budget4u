@@ -187,6 +187,14 @@ public abstract class User {
 
 	}
 
+	public void editOutlay(Outlay oldOutlay, Outlay newOut) {
+		currentMoney-= oldOutlay.getAmount();
+		currentMoney+= newOut.getAmount();
+		if(firstOutlay != null) {
+			firstOutlay.replace(oldOutlay,newOut);
+		}
+	}
+	
 	public boolean removeOutlay(String name, long amount) {
 		boolean removed = false;
 		OutlayNode currentNode = firstOutlay;
@@ -310,13 +318,7 @@ public abstract class User {
 		return list;
 	}
 	
-	public void editOutlay(Outlay oldOutlay, Outlay newOut) {
-		currentMoney-= oldOutlay.getAmount();
-		currentMoney+= newOut.getAmount();
-		if(firstOutlay != null) {
-			firstOutlay.replace(oldOutlay,newOut);
-		}
-	}
+	
 	
 	//------------------------------------------------------  Loaner code ------------------------------------------------------ 
 	
