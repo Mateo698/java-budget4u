@@ -396,6 +396,46 @@ public class AssistantGUI {
 				break;
 			}
     	}
+    	
+    	
+    }
+    
+    @FXML
+    void INCOMELISTmLbttn(ActionEvent event) throws IOException {
+    	FXMLLoader x = new FXMLLoader(getClass().getResource("AddML.fxml"));
+    	x.setController(this);
+    	Parent root = x.load();
+    	Scene e = new Scene(root);
+    	popupStage.setScene(e);
+    	popupStage.show();
+    	mainStage.hide();
+    }
+    
+    @FXML
+    private TextField ADDMLnametxt;
+
+    @FXML
+    private TextField ADDMLlastTxt;
+
+    @FXML
+    private TextField ADDMLphone;
+
+    @FXML
+    void ADDMLback(ActionEvent event) {
+    	popupStage.close();
+    	mainStage.show();
+    }
+
+    @FXML
+    void ADDMLdone(ActionEvent event) {
+    	localUser.addML(ADDMLnametxt.getText(), ADDMLlastTxt.getText(), ADDMLphone.getText());
+    	Alert alert = new Alert(AlertType.WARNING);
+    	alert.setTitle("Done");
+    	alert.setHeaderText("Added successfully.");
+		alert.setContentText("Going back to list.");
+		alert.showAndWait();
+		popupStage.close();
+		mainStage.show();
     }
     
   //------------------------------------------------------ ADD INCOME ------------------------------------------------------
@@ -1026,6 +1066,23 @@ public class AssistantGUI {
     
     private String fileName = "data/bounds.txt";
     
+    private void checker() {
+    	LocalDate d = LocalDate.now();
+    	Calendar c = new GregorianCalendar(d.getYear(),d.getMonthValue(),d.getDayOfMonth());
+    	if(localUser.getLastLogin() != c) {
+    		localUser.dailyCheck(c);
+    		localUser.setLastLogin(c);
+    		int previousMonth = 0;
+    		if(c.get(Calendar.MONTH) == 1) {
+    			previousMonth = 12;
+    		}else {
+    			previousMonth = c.get(Calendar.MONTH)-1;
+    		}
+    		if(!localUser.checkMonthBalance(previousMonth)) {
+    			localUser.checkBalance(previousMonth, c.get(Calendar.YEAR));
+    		}
+    	}
+    }
 
     public void importData() throws IOException{
     	BufferedReader br = new BufferedReader(new FileReader(fileName));

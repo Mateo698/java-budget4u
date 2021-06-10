@@ -36,4 +36,12 @@ public class MoneyLender {
 	public User getBorrower() {
 		return borrower;
 	}
+	
+	public void addMoneyLender(MoneyLender ml) {
+		if(nextMoneyLender == null) {
+			nextMoneyLender = ml;
+		}else {
+			nextMoneyLender.addMoneyLender(ml);
+		}
+	}
 }

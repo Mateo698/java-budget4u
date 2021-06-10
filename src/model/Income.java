@@ -40,6 +40,11 @@ public class Income implements Comparable<Income>,Serializable{
 		this.creationDate = creationDate;
 	}
 	
+	/**
+	 * Creates an string with the date of the balance
+	 * 
+	 * @return The created String
+	 */
 	public String getDate() {
 		String realDate = "";
 		realDate = creationDate.get(Calendar.DAY_OF_MONTH) + "/" + creationDate.get(Calendar.MONTH) + "/" + creationDate.get(Calendar.YEAR);

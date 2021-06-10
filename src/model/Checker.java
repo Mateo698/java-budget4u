@@ -42,9 +42,32 @@ public class Checker implements Serializable{
 	}
 	
 	//checkLoans
+	public long checkLoans(Calendar c) {
+		long amount = 0;
+		for (int i = 0; i < loansCheck.size(); i++) {
+			if(payDate(loansCheck.get(i),c)) {
+				amount -= loansCheck.get(i).getLoan().getAmount();
+				loansCheck.remove(i);
+			}
+		}
+		return amount;
+	}
 	
-	//checkOutlays
 	
+	private boolean payDate(LoanChecker loanChecker, Calendar c) {
+		boolean toPay = false;
+		if(loanChecker.getLoan().getPayDate().get(Calendar.MONTH) == c.get(Calendar.MONTH)) {
+			if(loanChecker.getLoan().getPayDate().get(Calendar.DAY_OF_MONTH) <= c.get(Calendar.DAY_OF_MONTH)) {
+				toPay = true;
+			}
+		}else if(loanChecker.getLoan().getPayDate().get(Calendar.MONTH) > c.get(Calendar.MONTH)){
+			toPay = true;
+		}
+		return toPay;
+	}
+
+
+
 	public void addIncomeChecker(IncomeChecker ic) {
 		incomesCheck.add(ic);
 	}
@@ -89,11 +112,31 @@ public class Checker implements Serializable{
 		}
 	}
 	
+	public void removeLoan(Loan loan) {
+		boolean end = false;
+		for (int i = 0; i < loansCheck.size() && !end; i++) {
+			if(loansCheck.get(i).getLoan() == loan) {
+				end = true;
+				loansCheck.remove(i);
+			}
+		}
+	}
+	
 	public void editIncome(RegularIncome oldIn, RegularIncome newIn) {
 		boolean end = false;
 		for (int i = 0; i < incomesCheck.size() && !end; i++) {
 			if(incomesCheck.get(i).getIncome() == oldIn) {
 				incomesCheck.get(i).setIncome(newIn);
+				end = true;
+			}
+		}
+	}
+	
+	public void editLoan(Loan oldLoan, Loan newLoan) {
+		boolean end = false;
+		for (int i = 0; i < loansCheck.size() && !end; i++) {
+			if(loansCheck.get(i).getLoan() == oldLoan) {
+				loansCheck.get(i).setLoan(newLoan);
 				end = true;
 			}
 		}

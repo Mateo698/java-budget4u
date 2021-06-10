@@ -44,6 +44,11 @@ public class Balance implements Serializable{
 		}
 	}
 	
+	/**
+	 * Creates an ArrayList with all the balances
+	 * 
+	 * @return The created array list
+	 */
 	public ArrayList<Balance> toArrayList(){
 		ArrayList<Balance> list = new ArrayList<Balance>();
 		list.add(this);
@@ -55,6 +60,12 @@ public class Balance implements Serializable{
 		}
 	}
 	
+	/**
+	 * Aux method to create the array list, called by the first method to create the array list
+	 * 
+	 * @param list The arraylist created in the first method
+	 * @return The array list with the other balances added
+	 */
 	public ArrayList<Balance> toArrayList(ArrayList<Balance> list){
 		list.add(this);
 		if(nextBalance != null) {
@@ -105,4 +116,11 @@ public class Balance implements Serializable{
 		this.name = name;
 	}
 	
+	public int getMonth() {
+		return date.get(Calendar.MONTH);
+	}
+	
+	public int getYear() {
+		return date.get(Calendar.YEAR);
+	}
 }

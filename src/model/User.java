@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 
 public abstract class User {
 	String name, password;
@@ -13,6 +14,7 @@ public abstract class User {
 	IncomeNode firstIncome;
 	OutlayNode firstOutlay;
 	Checker regularChecker;
+	Calendar lastLogin;
 
 	public User(String uname, String upass, TypesOfUser utype) {
 		name = uname;
@@ -22,6 +24,7 @@ public abstract class User {
 		firstOutlay = null;
 		currentMoney = 0;
 		regularChecker = new Checker();
+		lastLogin = null;
 	}
 
 	// ------------------------------------- Income code ------------------------------
@@ -77,7 +80,7 @@ public abstract class User {
 			regularChecker.removeIncome(in);
 		}else if(income instanceof Loan) {
 			Loan l = (Loan) income;
-			//regularChecker.removeLoan();
+			regularChecker.removeLoan(l);
 		}
 	}
 	
@@ -153,7 +156,9 @@ public abstract class User {
 			RegularIncome newIn = (RegularIncome) newInc;
 			regularChecker.editIncome(oldIn,newIn);
 		}else if(oldIncome instanceof Loan) {
-			
+			Loan oldLoan = (Loan) oldIncome;
+			Loan newLoan = (Loan) newInc;
+			regularChecker.editLoan(oldLoan, newLoan);
 		}
 	}
 
@@ -339,6 +344,72 @@ public abstract class User {
 		}
 	}
 	
+	public void generateBalance(int month,int year) {
+		if(!checkBalance(month, year)) {
+			long incomesAmount = 0;
+			long outlaysAmount = 0;
+			long loansAmount = 0;
+			ArrayList<Income> incomes = getIncomes();
+			ArrayList<Outlay> outlays = getOutlays();
+			for (int i = 0; i<incomes.size() ; i++) {
+				if(incomes.get(i) instanceof RegularIncome) {
+					incomesAmount += incomes.get(i).getAmount();
+				}else if(incomes.get(i) instanceof Loan) {
+					Loan aux = (Loan) incomes.get(i);
+					if(aux.getPayDate().get(Calendar.MONTH) == month) {
+						loansAmount += aux.getAmount();
+					}
+				}else {
+					if(incomes.get(i).getCreationDate().get(Calendar.MONTH) == month) {
+						incomesAmount += incomes.get(i).getAmount();
+					}
+				}
+			}
+			for (int i = 0; i < outlays.size(); i++) {
+				if(outlays.get(i) instanceof OrdinaryOutlay) {
+					outlaysAmount += outlays.get(i).getAmount();
+				}else {
+					if(outlays.get(i).getCreationDate().get(Calendar.MONTH) == month) {
+						outlaysAmount += outlays.get(i).getAmount();
+					}
+				}
+			}
+			Calendar date = new GregorianCalendar(year,month,1);
+			Balance balance = new Balance(incomesAmount,outlaysAmount,loansAmount,date);
+			if(firstBalance != null) {
+				balance.addBalance(balance);
+			}else {
+				firstBalance = balance;
+			}
+		}else {
+			System.out.println("wtfBalance");
+		}
+		
+		
+	}
+	
+	public boolean checkBalance(int month, int year) {
+		boolean created= false;
+		ArrayList<Balance> balances = getBalances();
+		for (int i = 0; i < balances.size(); i++) {
+			if(balances.get(i).getMonth() == month && balances.get(i).getYear() == year) {
+				created = true;
+			}
+		}
+		return created;
+	}
+	
+	public boolean checkMonthBalance(int month) {
+		boolean created = false;
+		ArrayList<Balance> balances = getBalances();
+		for (int i = 0; i < balances.size() && !created; i++) {
+			if(balances.get(i).getMonth() == month) {
+				created = true;
+			}
+		}
+		return created;
+	}
+	
 	// ------------------------------------- getters ------------------------------
 	public IncomeNode getIncomeNode() {
 		return firstIncome;
@@ -383,8 +454,24 @@ public abstract class User {
 		if(today.get(Calendar.DAY_OF_MONTH) == 1)
 		currentMoney += regularChecker.checkIncomes(today);
 		currentMoney -= regularChecker.checkOutlays(today);
+		currentMoney -= regularChecker.checkLoans(today);
+	}
+
+	public Calendar getLastLogin() {
+		return lastLogin;
+	}
+
+	public void setLastLogin(Calendar lastLogin) {
+		this.lastLogin = lastLogin;
 	}
 	
-	
+	public void addML(String name, String last, String phone) {
+		MoneyLender ml = new MoneyLender(name, last, phone, this);
+		if(firstMoneyLender != null) {
+			firstMoneyLender.addMoneyLender(ml);
+		}else {
+			firstMoneyLender = ml;
+		}
+	}
 	
 }
