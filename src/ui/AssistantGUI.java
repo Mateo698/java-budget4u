@@ -48,6 +48,7 @@ import model.Loan;
 import model.MoneyLender;
 import model.OrdinaryOutlay;
 import model.Outlay;
+import model.OutlayNameComparator;
 import model.RegularIncome;
 import model.TypesOfUser;
 import model.User;
@@ -813,43 +814,116 @@ public class AssistantGUI {
     private TableColumn<Outlay, String> OUTLAYLISTtypeCol;
 
     @FXML
+    private TableColumn<Outlay, String> OUTLAYLISTdateCol;
+    
+    @FXML
+    private ComboBox<String> OUTLAYLISTtypeSort;
+    
+    @FXML
     void OUTLAYLISTbackBttn(ActionEvent event) throws IOException {
     	showMainMenuNoTime();
     }
 
     @FXML
     void OUTLAYLISTdeleteBttn(ActionEvent event) {
-    	
+    	if(OUTLAYLISTlistView.getSelectionModel().getSelectedItem() == null) {
+    		Alert alert = new Alert(AlertType.WARNING);
+	    	alert.setTitle("Error");
+			alert.setHeaderText("No item selected.");
+			alert.setContentText("Please select an item if you want to delete it.");
+			alert.showAndWait();
+    	}else {
+    		Outlay delete = OUTLAYLISTlistView.getSelectionModel().getSelectedItem();
+    		localUser.removeOutlay(delete);
+    		refreshOutlayList();
+    	}
     }
     
     @FXML
-    void OUTLAYLISTsearchBttn(ActionEvent event) {
-
+    void OUTLAYLISTsearchBttn(ActionEvent event) throws IOException {
+    	showSearchOutlay();
     }
 
     @FXML
     void OUTLAYLISTselectedItem(MouseEvent event) throws IOException {
-    	Outlay choosed = OUTLAYLISTlistView.getSelectionModel().getSelectedItem();
-    	
-    	if(choosed != null) {
-    		editOutlayIndex = choosed;
-    		String name = choosed.getName();
-    		long value = choosed.getAmount();
-    		String type = choosed.getType();
-    		
-    		showEditOutlay(name, value, type, null, null);
-    	}else {
-    		Alert alert = new Alert(AlertType.WARNING);
-    		alert.setTitle("Warning!");
-    		alert.setHeaderText("Invalid selection");
-    		alert.setContentText("Try again with a valid outlay");
+    	if(event.getClickCount() == 2) {
+	    	Outlay choosed = OUTLAYLISTlistView.getSelectionModel().getSelectedItem();
+	    		    	
+	    	if(choosed != null) {
+	    		editOutlayIndex = choosed;
+	    		String name = choosed.getName();
+	    		long value = choosed.getAmount();
+	    		String type = choosed.getType();
+	    		
+	    		showEditOutlay(name, value, type, null, null);
+	    	}else {
+	    		Alert alert = new Alert(AlertType.WARNING);
+	    		alert.setTitle("Warning!");
+	    		alert.setHeaderText("Invalid selection");
+	    		alert.setContentText("Try again with a valid outlay");
+	    	}
     	}
     }
 
     @FXML
     void OUTLAYLISTsortBttn(ActionEvent event) {
-
+    	String sortType = OUTLAYLISTtypeSort.getValue();
+    	if(!sortType.equals("")) {
+    		switch (sortType) {
+				case "Name":
+					ArrayList<Outlay> nameSorted = localUser.getOutlayNameSorted();
+					if(nameSorted != null) {
+						ObservableList<Outlay> outlaysList = FXCollections.observableList(nameSorted);
+			    		OUTLAYLISTlistView.setItems(outlaysList);
+			    		OUTLAYLISTlistView.refresh();
+					}else {
+						Alert alert = new Alert(AlertType.WARNING);
+				    	alert.setTitle("Error");
+						alert.setHeaderText("No items to be sorted.");
+						alert.setContentText("Please add incomes to be sorted before sorting.");
+						alert.showAndWait();
+					}
+					break;
+	
+				case "Amount":
+					ArrayList<Outlay> amountSorted = localUser.getOutlayAmountSorted();
+					if(amountSorted != null) {
+						ObservableList<Outlay> outlaysList = FXCollections.observableList(amountSorted);
+			    		OUTLAYLISTlistView.setItems(outlaysList);
+			    		OUTLAYLISTlistView.refresh();
+					}else{
+						Alert alert = new Alert(AlertType.WARNING);
+				    	alert.setTitle("Error");
+				    	alert.setHeaderText("No items to be sorted.");
+						alert.setContentText("Please add incomes to be sorted before sorting.");
+						alert.showAndWait();
+					}
+					break;
+					
+				case "Date":
+					ArrayList<Income> dateSorted = localUser.getIncomeDateSorted();
+					if(dateSorted != null) {
+						ObservableList<Income> incomesList = FXCollections.observableList(dateSorted);
+			    		INCOMELISTlistView.setItems(incomesList);
+			    		INCOMELISTlistView.refresh();
+					}else {
+						Alert alert = new Alert(AlertType.WARNING);
+				    	alert.setTitle("Error");
+				    	alert.setHeaderText("No items to be sorted.");
+						alert.setContentText("Please add incomes to be sorted before sorting.");
+						alert.showAndWait();
+					}
+					break;
+    		}
+    	}else {
+    		Alert alert = new Alert(AlertType.WARNING);
+    		alert.setTitle("Wrong choose");
+    		alert.setHeaderText("Try again");
+    		alert.setContentText("You haven't choosed a sort type yet.");
+    		alert.showAndWait();
+    	}    	
     }
+    
 
     @FXML
     void OUTLAYLISTtypeSortCB(ActionEvent event) {
@@ -1044,12 +1118,63 @@ public class AssistantGUI {
     	mainStage.show();
     }
 
+
+    //------------------------------------------------------ SEARCH OUTLAY  ------------------------------------------------------
+    
     @FXML
-    void EDITOUTLAYtypeM(ActionEvent event) {
-    	
+    private TextField SEARCHOUTLAYnameTxt;
+
+    @FXML
+    private TableView<Outlay> SEARCHOUTLAYtable;
+
+    @FXML
+    private TableColumn<Outlay, String> SEARCHOUTLAYnameCol;
+
+    @FXML
+    private TableColumn<Outlay, Long> SEARCHOUTLAYamountCol;
+
+    @FXML
+    private TableColumn<Outlay, String> SEARCHOUTLAYypeCol;
+
+    @FXML
+    void SEARCHOUTLAYcancelBttn(ActionEvent event) {
+    	popupStage.close();
+    	mainStage.show();
     }
 
-    
+    @FXML
+    void SEARCHOUTLAYdoneBttn(ActionEvent event) {
+    	popupStage.close();
+    	mainStage.show();
+    }
+
+    @FXML
+    void SEARCHOUTLAYsearchBttn(ActionEvent event) {
+    	ArrayList<Outlay> list = localUser.getOutlayNameSorted();
+    	if(list != null) {
+    		int index = Collections.binarySearch(list, new Outlay(SEARCHOUTLAYnameTxt.getText(), 0, null),new OutlayNameComparator());
+    		if(index >= 0) {
+    			ArrayList<Outlay> oneItem = new ArrayList<Outlay>();
+    			oneItem.add(list.get(index));
+    			ObservableList<Outlay> outlaysList = FXCollections.observableList(oneItem);
+    			SEARCHOUTLAYtable.setItems(outlaysList);
+    			SEARCHOUTLAYtable.refresh();
+    		}else {
+    			Alert alert = new Alert(AlertType.WARNING);
+    			alert.setTitle("Error");
+    			alert.setHeaderText("No outlay found.");
+    			alert.setContentText("There is not any item with that name.");
+    			alert.showAndWait();
+    		}
+    	}else {
+    		Alert alert = new Alert(AlertType.WARNING);
+	    	alert.setTitle("Error");
+			alert.setHeaderText("No outlays found.");
+			alert.setContentText("There are not any incomes yet.");
+			alert.showAndWait();
+    	}
+    }
+
     
     //------------------------------------------------------ MONEYLENDER ------------------------------------------------------
     
@@ -1270,12 +1395,17 @@ public class AssistantGUI {
     	Parent r = x.load();
     	changingPane.getChildren().setAll(r);
     	refreshOutlayList();
+
+    	OUTLAYLISTtypeSort.getItems().add("Name");
+    	OUTLAYLISTtypeSort.getItems().add("Amount");
+    	OUTLAYLISTtypeSort.getItems().add("Date");
     }
     
     private void refreshOutlayList() {
         OUTLAYLISTnameCol.setCellValueFactory(new PropertyValueFactory<Outlay, String>("name"));
         OUTLAYLISTamountCol.setCellValueFactory(new PropertyValueFactory<Outlay, Long>("amount"));
         OUTLAYLISTtypeCol.setCellValueFactory(new PropertyValueFactory<Outlay, String>("type"));
+        OUTLAYLISTdateCol.setCellValueFactory(new PropertyValueFactory<Outlay, String>("date"));
         
         ArrayList<Outlay> outlaysList = localUser.getOutlays();
         if(outlaysList != null) {
@@ -1302,14 +1432,10 @@ public class AssistantGUI {
     	mainStage.hide();
     	
     	ADDOUTLAYbalanceLabel.setText(localUser.getMoney() + "");
-    	
-    	
-    	ArrayList<String> typesS = new ArrayList<String>();
-    	typesS.add("Regular");
-    	typesS.add("Irregular");
-    	typesS.add("Home");
-    	ObservableList<String> types = FXCollections.observableArrayList(typesS);
-    	ADDOUTLAYtype.setItems(types);
+    	  	
+    	ADDOUTLAYtype.getItems().add("Regular");
+    	ADDOUTLAYtype.getItems().add("Irregular");
+    	ADDOUTLAYtype.getItems().add("Home");
     }
     
     private void showEditOutlay(String name, long value, String option, Calendar pd, String reason) throws IOException{ 	
@@ -1343,6 +1469,24 @@ public class AssistantGUI {
     		EDITOUTLAYregularPane.setVisible(false);
     		EDITOUTLAYirregularPane.setVisible(true);
     	}
+    }
+    
+    private void showSearchOutlay() throws IOException {
+   	    FXMLLoader loader = new FXMLLoader(getClass().getResource("SearchOutlay.fxml"));
+    	loader.setController(this);
+    	Parent root = loader.load();
+    	Scene e = new Scene(root);
+   	   	popupStage.setScene(e);
+       	popupStage.show();
+  	    mainStage.hide();
+  	    
+  	    try {
+  	    	SEARCHOUTLAYnameCol.setCellValueFactory(new PropertyValueFactory<Outlay,String>("name"));
+  	  	    SEARCHOUTLAYamountCol.setCellValueFactory(new PropertyValueFactory<Outlay,Long>("amount"));
+  	  	    SEARCHOUTLAYypeCol.setCellValueFactory(new PropertyValueFactory<Outlay,String>("type"));
+  	    }catch(NullPointerException ex) {
+  	    	
+  	    }
     }
     
     private void showBalanceList() throws IOException {

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <HBox alignment="CENTER" prefHeight="59.0" prefWidth="600.0" style="-fx-background-color: #4da8fc;" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Search outlay">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="137.0" layoutY="43.0" text="Outlay's name">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="SEARCHOUTLAYnameTxt" layoutX="137.0" layoutY="69.0" />
+            <Button layoutX="325.0" layoutY="69.0" mnemonicParsing="false" onAction="#SEARCHOUTLAYsearchBttn" text="Search" />
+            <TableView fx:id="SEARCHOUTLAYtable" layoutX="57.0" layoutY="110.0" prefHeight="138.0" prefWidth="457.0">
+              <columns>
+                <TableColumn fx:id="SEARCHOUTLAYnameCol" prefWidth="171.0" text="Name" />
+                <TableColumn fx:id="SEARCHOUTLAYamountCol" prefWidth="151.0" text="Amount" />
+                  <TableColumn fx:id="SEARCHOUTLAYypeCol" prefWidth="134.0" text="Type" />
+              </columns>
+            </TableView>
+            <Button layoutX="23.0" layoutY="270.0" mnemonicParsing="false" onAction="#SEARCHOUTLAYcancelBttn" prefHeight="45.0" prefWidth="102.0" style="-fx-background-color: #4da8fc;" text="Cancel">
+               <graphic>
+                  <ImageView fitHeight="34.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../icons/cancel.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button layoutX="482.0" layoutY="270.0" mnemonicParsing="false" onAction="#SEARCHOUTLAYdoneBttn" prefHeight="45.0" prefWidth="102.0" style="-fx-background-color: #4da8fc;" text="Done">
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../icons/check.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+      </Pane>
+   </center>
+</BorderPane>
