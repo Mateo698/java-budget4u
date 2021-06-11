@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import exceptions.ExistingUserException;
+import exceptions.NegativeAmountException;
 import exceptions.NotOnlyNumberException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -70,7 +71,7 @@ public class AssistantGUI {
 	
 	public AssistantGUI() {
 		assistant = new Assistant();
-		assistant.createUser("Admin", "123",TypesOfUser.STUDENT);
+		//assistant.createUser("Admin", "123",TypesOfUser.STUDENT);
 		editIncomeIndex = null;
 	}
 	
@@ -87,6 +88,7 @@ public class AssistantGUI {
     	String pass = LOGINPasswordTxt.getText();
     	if(assistant.login(username, pass)) {
     		localUser = assistant.getUser(username);
+    		checker();
     		showMainMenu();
     	}else {
     		Alert alertWarnings = new Alert(AlertType.WARNING);
@@ -554,6 +556,12 @@ public class AssistantGUI {
 				alert.setHeaderText("No type selected");
 				alert.setContentText("Please select a type of income.");
 				alert.showAndWait();
+			} catch (NegativeAmountException n) {
+				Alert alert = new Alert(AlertType.WARNING);
+		    	alert.setTitle("Error");
+				alert.setHeaderText("Invalid amount");
+				alert.setContentText("Please type only positive amounts.");
+				alert.showAndWait();
 			}
     	}else {
     		Alert alert = new Alert(AlertType.WARNING);
@@ -578,7 +586,7 @@ public class AssistantGUI {
         });
     }
     
-    public boolean checkText(String text) throws NotOnlyNumberException{
+    public boolean checkText(String text) throws NotOnlyNumberException, NegativeAmountException{
     	boolean textFound = false;
     	for (int i = 0; i < text.length(); i++) {
 			if(text.charAt(i) < 48 || text.charAt(i) > 57) {
@@ -588,6 +596,10 @@ public class AssistantGUI {
     	if(textFound) {
     		throw new NotOnlyNumberException(text);
     	}else {
+    		long amount = Long.parseLong(text);
+    		if(amount < 0) {
+    			throw new NegativeAmountException(amount);
+    		}
     		return textFound;
     	}
     }
@@ -1014,6 +1026,12 @@ public class AssistantGUI {
     		alert.setHeaderText("Wrong amount");
     		alert.setContentText("Please fill the amount field only with numbers.");
     		alert.showAndWait();
+    	}catch (NegativeAmountException n) {
+    		Alert alert = new Alert(AlertType.WARNING);
+	    	alert.setTitle("Error");
+			alert.setHeaderText("Invalid amount");
+			alert.setContentText("Please type only positive amounts.");
+			alert.showAndWait();
     	}
     	
     }
@@ -1282,7 +1300,7 @@ public class AssistantGUI {
     	br.close();
     }
 
-    public void start() throws IOException {
+    public void start() throws IOException, ClassNotFoundException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
     	loader.setController(this);
     	Parent root = loader.load();
@@ -1307,6 +1325,11 @@ public class AssistantGUI {
 				time.setStop();
 				ballOne.setStop();
 				ballTwo.setStop();
+				try {
+					assistant.saveData();
+				} catch (IOException e) {
+					
+				}
 			}
 		});
 		popupStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -1316,8 +1339,15 @@ public class AssistantGUI {
 				time.setStop();
 				ballOne.setStop();
 				ballTwo.setStop();
+				try {
+					assistant.saveData();
+				} catch (IOException e) {
+					
+				}
 			}
 		});
+		
+		assistant.loadData();
 	}
     
     private void showLogin() throws IOException {

@@ -1,6 +1,12 @@
 package model;
 
-public class Node {
+import java.io.Serializable;
+
+public class Node implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1;
 	private String identifier;
 	private Node next;
 	

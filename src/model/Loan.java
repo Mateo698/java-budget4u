@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 
 public class Loan extends Income implements Serializable{
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1;
 	private String type = "Loan";
 	private Calendar payDate;
 	private MoneyLender lender;

@@ -2,6 +2,11 @@ package model;
 
 public class UserStudent extends User{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1;
+
 	/*
 	 * Constructor UserStudent.
 	 * This method creates a new student user. 

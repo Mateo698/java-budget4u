@@ -1,6 +1,13 @@
 package model;
 
-public class MoneyLender {
+import java.io.Serializable;
+
+public class MoneyLender implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1;
+
 	MoneyLender nextMoneyLender;
 	
 	String name, lastName, phone;

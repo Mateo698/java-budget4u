@@ -2,6 +2,11 @@ package model;
 
 public class UserGeneric extends User{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1;
+
 	/*
 	 * Constructor UserGeneric.
 	 * This method creates a new generic user. 

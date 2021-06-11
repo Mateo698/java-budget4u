@@ -1,11 +1,16 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 
-public abstract class User {
+public abstract class User implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1;
 	String name, password;
 	long currentMoney;
 	TypesOfUser type;
@@ -393,20 +398,25 @@ public abstract class User {
 	public boolean checkBalance(int month, int year) {
 		boolean created= false;
 		ArrayList<Balance> balances = getBalances();
-		for (int i = 0; i < balances.size(); i++) {
-			if(balances.get(i).getMonth() == month && balances.get(i).getYear() == year) {
-				created = true;
+		if(balances != null) {
+			for (int i = 0; i < balances.size(); i++) {
+				if(balances.get(i).getMonth() == month && balances.get(i).getYear() == year) {
+					created = true;
+				}
 			}
 		}
+		
 		return created;
 	}
 	
 	public boolean checkMonthBalance(int month) {
 		boolean created = false;
 		ArrayList<Balance> balances = getBalances();
-		for (int i = 0; i < balances.size() && !created; i++) {
-			if(balances.get(i).getMonth() == month) {
-				created = true;
+		if(balances != null) {
+			for (int i = 0; i < balances.size() && !created; i++) {
+				if(balances.get(i).getMonth() == month) {
+					created = true;
+				}
 			}
 		}
 		return created;

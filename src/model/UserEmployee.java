@@ -2,6 +2,11 @@ package model;
 
 public class UserEmployee extends User{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1;
+
 	/*
 	 * Constructor UserEmployee.
 	 * This method creates a new employee user. 
