@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ class IncomeNodeTest {
 	private IncomeNode firstIncomeNode;
 	
 	public void setupScenary1() {
-		Date d = new Date();
 		Calendar c = new GregorianCalendar();
 		Income in = new Income("test", 1000, c);
 		firstIncomeNode = new IncomeNode("213",in);

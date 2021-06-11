@@ -9,6 +9,13 @@ public class OutlayNode extends Node implements AddNode,CheckNode,Serializable{
 	private OutlayNode greaterNode;
 	private OutlayNode lowerNode;
 	
+	/*
+	 * Constructor OutlayNode.
+	 * This method creates a new outlay node. 
+	 * @param id 	contains the identifier of the new node. String, not empty neither null.
+	 * @param ou	contains the outlay of the node. Outlay, cann't be null.
+	 * @return OutlayNode, returns a new outlay node.
+	 */
 	public OutlayNode(String id, Outlay ou) {
 		super(id);
 		outlay = ou;
@@ -49,6 +56,11 @@ public class OutlayNode extends Node implements AddNode,CheckNode,Serializable{
 		}
 	}
 
+	/*
+	 * Add OutlayNode Generic.
+	 * This method adds a new node and link it with the higher or lower nodes if it's necessary. 
+	 * @param n 	contains the new node to add. Node, cann't be null.
+	 */
 	@Override
 	public void addNode(Node n) {
 		OutlayNode realNode = (OutlayNode) n;
@@ -82,7 +94,6 @@ public class OutlayNode extends Node implements AddNode,CheckNode,Serializable{
 	}
 	
 	public ArrayList<Outlay> realOutlays(ArrayList<Outlay> list){
-		//System.out.println("Entered");
 		list.add(outlay);
 		if(greaterNode != null) {
 			list = greaterNode.realOutlays(list);
@@ -94,6 +105,12 @@ public class OutlayNode extends Node implements AddNode,CheckNode,Serializable{
 		return list;
 	}
 	
+	/*
+	 * Search OutlayNode.
+	 * This method searches the requested node. 
+	 * @param ou 	contains the outlay contained in the node to search. Outlay cann't be null.
+	 * @return searched, returns the searched outlayNode.
+	 */
 	public Outlay searchNode(Outlay ou) {
 		Outlay searched = null;
 		if(ou.getName() == outlay.getName()) {
@@ -109,6 +126,12 @@ public class OutlayNode extends Node implements AddNode,CheckNode,Serializable{
 		}
 	}
 	
+	/*
+	 * Replace OutlayNode.
+	 * This method replaces an outlay with a new one. 
+	 * @param oldOut 	contains the outlay to be replaced. Outlay, cann't be null..
+	 * @param newOut	contains the outlay to replace with. Outlay, cann't be null.
+	 */
 	public void replace(Outlay oldOutlay, Outlay newOut) {
 		if(outlay == oldOutlay) {
 			outlay = newOut;
