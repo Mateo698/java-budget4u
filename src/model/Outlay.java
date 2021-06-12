@@ -3,6 +3,11 @@ package model;
 import java.io.Serializable;
 import java.util.Calendar;
 
+/** Represents an outlay.
+* @author https://github.com/Mateo698
+* @author https://github.com/KennetSanchez
+* @version 1.0
+*/
 public class Outlay implements Comparable<Outlay>,Serializable{
 	
 	private static final long serialVersionUID = 1;

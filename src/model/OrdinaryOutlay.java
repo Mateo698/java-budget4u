@@ -2,6 +2,11 @@ package model;
 
 import java.util.Calendar;
 
+/** Represents an ordinary outlay, it's going to be discounted when the pay date arrives.
+* @author https://github.com/Mateo698
+* @author https://github.com/KennetSanchez
+* @version 1.0
+*/
 public class OrdinaryOutlay extends Outlay{
 
 	private static final long serialVersionUID = 1L;

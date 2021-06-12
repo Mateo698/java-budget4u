@@ -6,6 +6,11 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 
+/** Represents an user.
+ * @author https://github.com/Mateo698
+ * @author https://github.com/KennetSanchez 
+ * @version 1.0
+*/
 public abstract class User implements Serializable{
 	/**
 	 * 

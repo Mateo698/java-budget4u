@@ -2,6 +2,11 @@ package model;
 
 import java.util.Calendar;
 
+/** Represents a home outlay. 
+* @author https://github.com/Mateo698
+* @author https://github.com/KennetSanchez
+* @version 1.0
+*/
 public class HomeOutlay extends Outlay {
 
 	private static final long serialVersionUID = 1L;

@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+/** Represents the balance(s) of the user. 
+* @author https://github.com/Mateo698
+* @author https://github.com/KennetSanchez
+* @version 1.0
+*/ 
 public class Balance implements Serializable{
 	
 	private static final long serialVersionUID = 1;
@@ -13,6 +18,14 @@ public class Balance implements Serializable{
 	private String name;
 	private Balance nextBalance;
 	
+	/** Create a new outlay - regular.
+	 * This method creates a new regular outlay. 
+	 * @param income 	contains the total amount of incomes. Long, cann't be null.
+	 * @param outlay	contains the total amount of outlays. Long, cann't be null.
+	 * @param loans		contains the total amount of loans. Long, cann't be null.
+	 * @param date		contains the creation date of the balance. Calendar, cann't be null.
+	 * @return Balance, return a new balance.
+	 */
 	public Balance(double income, double outlay, double loans, Calendar date) {
 		this.setIncome(income);
 		this.setOutlay(outlay);
@@ -36,6 +49,10 @@ public class Balance implements Serializable{
 		nextBalance = next;
 	}
 	
+	/** Add balance.
+	 * 	This method adds a new balance to the list.
+	 * @param newBalance	contains the new balance to add. Balance Cann't be null.
+	 */
 	public void addBalance(Balance newBalance) {
 		if(nextBalance == null) {
 			nextBalance = newBalance;
@@ -44,10 +61,9 @@ public class Balance implements Serializable{
 		}
 	}
 	
-	/**
-	 * Creates an ArrayList with all the balances
-	 * 
-	 * @return The created array list
+	/**	To arrayList - first part.
+	 * 	This method converts the balances into an array list.
+	 * @return list, an array with the other balances added
 	 */
 	public ArrayList<Balance> toArrayList(){
 		ArrayList<Balance> list = new ArrayList<Balance>();
@@ -60,11 +76,10 @@ public class Balance implements Serializable{
 		}
 	}
 	
-	/**
-	 * Aux method to create the array list, called by the first method to create the array list
-	 * 
-	 * @param list The arraylist created in the first method
-	 * @return The array list with the other balances added
+	/**	To arrayList - second part.
+	 * 	This method converts the balances into an array list.
+	 * @param list	contains the array list created in the first method. Cann't be null.
+	 * @return list, an array with the other balances added
 	 */
 	public ArrayList<Balance> toArrayList(ArrayList<Balance> list){
 		list.add(this);

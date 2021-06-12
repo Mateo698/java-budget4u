@@ -1,10 +1,12 @@
 package model;
 
+/** Represents a generic user.
+ * @author https://github.com/Mateo698
+ * @author https://github.com/KennetSanchez 
+ * @version 1.0
+*/
 public class UserGeneric extends User{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1;
 
 	/*

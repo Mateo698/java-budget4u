@@ -2,6 +2,11 @@ package model;
 
 import java.util.Comparator;
 
+/** It's a comparator for the names of the outlays.
+* @author https://github.com/Mateo698
+* @author https://github.com/KennetSanchez
+* @version 1.0
+*/
 public class OutlayNameComparator implements Comparator<Outlay>{
 
 	/*

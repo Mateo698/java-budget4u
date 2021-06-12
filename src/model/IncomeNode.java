@@ -3,12 +3,23 @@ package model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/** Represent the income nodes.
+* @author https://github.com/Mateo698
+* @author https://github.com/KennetSanchez
+* @version 1.0
+*/
 public class IncomeNode extends Node implements AddNode,CheckNode,Serializable{
 	private static final long serialVersionUID = 1;
 	private Income income;
 	private IncomeNode greaterNode;
 	private IncomeNode lowerNode;
 	
+	/** Constructor income node.
+	* This method creates a new income Node.
+	* @param id 	contains the id of the node. String, cann't be empty neither null.
+	* @param in 	contains the income of the node. Income, cann't be null.
+	* @return IncomeNode, returns a new income node.
+	*/
 	public IncomeNode(String id, Income in) {
 		super(id);
 		income = in;
@@ -40,6 +51,11 @@ public class IncomeNode extends Node implements AddNode,CheckNode,Serializable{
 		this.income = income;
 	}
 
+	
+	 /** CheckNode.
+	 * This method checks if a node is linked or not. 
+	 * @return boolean, returns a boolean to let the program knows if the node it's linked or not.
+	 */
 	@Override
 	public boolean checkNode() {
 		if(greaterNode != null || lowerNode != null) {
@@ -49,6 +65,11 @@ public class IncomeNode extends Node implements AddNode,CheckNode,Serializable{
 		}
 	}
 
+	
+	 /** Add IncomeNode.
+	 * This method adds a new node and link it with the higher or lower nodes if it's necessary. 
+	 * @param n 	contains the new node to add. Node, cann't be null.
+	 */
 	@Override
 	public void addNode(Node n) {
 		IncomeNode realNode = (IncomeNode) n;
@@ -68,6 +89,10 @@ public class IncomeNode extends Node implements AddNode,CheckNode,Serializable{
 		
 	}
 	
+	/** Real incomes - first part.
+	 * This method starts the conversion of the incomes into an array list. 
+	 * @return list, an array list with the first income.
+	 */
 	public ArrayList<Income> realIncomes(){
 		ArrayList<Income> list = new ArrayList<>();
 		list.add(income);
@@ -81,8 +106,12 @@ public class IncomeNode extends Node implements AddNode,CheckNode,Serializable{
 		
 	}
 	
+	/** Real incomes - second part.
+	 * This method continues/finish the conversion of the incomes into an array list. 
+	 * @param list	contains an array list with other incomes. ArrayList, cann't be null..
+	 * @return list, an array list with the incomes.
+	 */
 	public ArrayList<Income> realIncomes(ArrayList<Income> list){
-		//System.out.println("Entered");
 		list.add(income);
 		if(greaterNode != null) {
 			list = greaterNode.realIncomes(list);
@@ -94,6 +123,11 @@ public class IncomeNode extends Node implements AddNode,CheckNode,Serializable{
 		return list;
 	}
 	
+	/** Search IncomeNode.
+	* This method searches the requested income. 
+	* @param ou 	contains the outlay contained in the node to search. Income cann't be null.
+	* @return searched, returns the searched Income.
+	*/
 	public Income searchNode(Income in) {
 		Income searched = null;
 		if(in.getName() == income.getName()) {
@@ -109,6 +143,11 @@ public class IncomeNode extends Node implements AddNode,CheckNode,Serializable{
 		}
 	}
 	
+	/** Replace IncomeNode.
+	 * This method replaces an income with a new one. 
+	 * @param oldIncome 	contains the income to be replaced. Income, cann't be null..
+	 * @param newIncome		contains the income to replace with. Income, cann't be null.
+	 */
 	public void replace(Income oldIncome, Income newInc) {
 		if(income == oldIncome) {
 			income = newInc;
