@@ -75,13 +75,18 @@ public abstract class User implements Serializable{
 					leave = true;
 				}
 			}
-			Collections.sort(realIncomes);
-			IncomeNode newFirst = new IncomeNode(realIncomes.get(0).getName(),realIncomes.get(0));
-			for(int i=1;i<realIncomes.size();i++) {
-				Node newNode = new IncomeNode(realIncomes.get(i).getName(),realIncomes.get(i));
-				newFirst.addNode(newNode);
+			if(realIncomes.size() == 0) {
+				firstIncome = null;
+			}else {
+				Collections.sort(realIncomes);
+				IncomeNode newFirst = new IncomeNode(realIncomes.get(0).getName(),realIncomes.get(0));
+				for(int i=1;i<realIncomes.size();i++) {
+					Node newNode = new IncomeNode(realIncomes.get(i).getName(),realIncomes.get(i));
+					newFirst.addNode(newNode);
+				}
+				firstIncome =  newFirst;
 			}
-			firstIncome =  newFirst;
+			
 		}
 		if(income instanceof RegularIncome) {
 			RegularIncome in = (RegularIncome) income;
