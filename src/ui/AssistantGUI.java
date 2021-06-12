@@ -72,7 +72,7 @@ public class AssistantGUI {
 	boolean registeredNewUSer = false;
 	public AssistantGUI(){
 		assistant = new Assistant();
-		//assistant.createUser("Admin", "123",TypesOfUser.STUDENT);
+		assistant.createUser("Admin", "123",TypesOfUser.GENERIC);
 		editIncomeIndex = null;
 	}
 	
