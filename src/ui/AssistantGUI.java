@@ -68,7 +68,8 @@ public class AssistantGUI {
 	private Outlay editOutlayIndex;
 	private int[] boundsOne;
 	private int[] boundsTwo;
-	
+	 
+	boolean registeredNewUSer = false;
 	public AssistantGUI(){
 		assistant = new Assistant();
 		//assistant.createUser("Admin", "123",TypesOfUser.STUDENT);
@@ -89,7 +90,11 @@ public class AssistantGUI {
     	if(assistant.login(username, pass)) {
     		localUser = assistant.getUser(username);
     		checker();
-    		showMainMenu();
+    		if(registeredNewUSer) {
+    			showMainMenuNoTime();
+    		}else {
+    			showMainMenu();
+    		}
     	}else {
     		Alert alertWarnings = new Alert(AlertType.WARNING);
 	    	alertWarnings.setTitle("Error");
@@ -845,7 +850,7 @@ public class AssistantGUI {
     }
 
     @FXML
-    void OUTLAYLISTdeleteBttn(ActionEvent event) {
+    void OUTLAYLISTdeleteBttn(ActionEvent event) throws IOException {
     	if(OUTLAYLISTlistView.getSelectionModel().getSelectedItem() == null) {
     		Alert alert = new Alert(AlertType.WARNING);
 	    	alert.setTitle("Error");
@@ -855,7 +860,7 @@ public class AssistantGUI {
     	}else {
     		Outlay delete = OUTLAYLISTlistView.getSelectionModel().getSelectedItem();
     		localUser.removeOutlay(delete);
-    		refreshOutlayList();
+    		showOutlayList();
     	}
     }
     
