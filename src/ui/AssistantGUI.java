@@ -134,21 +134,27 @@ public class AssistantGUI {
     	}else {
         	boolean done = assistant.createUser(name, pass, type);
         	
-    		if(done) {
+        	try {
+    			checkUsers(done);
     			Alert alert = new Alert(AlertType.CONFIRMATION);
     			alert.setTitle("Done");
     			alert.setHeaderText("User registred succesfully");
     			alert.setContentText("The user has been created.");
-    			alert.showAndWait();	
+    			alert.show();	
     			showLogin();
-    		}else {
-    			//throw new ExistingUserException();
-    			Alert alert = new Alert(AlertType.WARNING);
-    			alert.setTitle("Error");
-    			alert.setHeaderText("Something went wrong!");
-    			alert.setContentText("Try with another name");
-    			alert.showAndWait();
+    		}catch(ExistingUserException ex) {
+    			Alert alert = new Alert(Alert.AlertType.ERROR);
+    			alert.setTitle("Error!");
+    			alert.setHeaderText("The user cann't registeres.");
+    			alert.setContentText("The user has a registered name, try again.");
+    			alert.showAndWait();	
     		}
+    	}
+    }
+    
+    private void checkUsers(boolean done) throws ExistingUserException {
+    	if(!done) {
+    		throw new ExistingUserException();
     	}
     }
     
@@ -1349,7 +1355,6 @@ public class AssistantGUI {
     	FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
     	loader.setController(this);
     	Parent root = loader.load();
-    	mainStage = new Stage();
     	Scene e = new Scene(root);
     	mainStage.setScene(e);
     }
