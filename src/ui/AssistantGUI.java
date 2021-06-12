@@ -726,7 +726,9 @@ public class AssistantGUI {
         		MoneyLender lender = EDITINCOMElenderCB.getSelectionModel().getSelectedItem();
         		Loan newLoan = new Loan(EDITINCOMEnameTxt.getText(),Long.parseLong(EDITINCOMEamountTxt.getText()),editIncomeIndex.getCreationDate(),c,lender);
         		localUser.editIncome(editIncomeIndex, newLoan);
-        	}	
+        	}
+    		popupStage.close();
+    		mainStage.show();
     	}else {
     		Alert alert = new Alert(AlertType.WARNING);
 	    	alert.setTitle("Error");
@@ -753,6 +755,8 @@ public class AssistantGUI {
     
     public boolean EDITINCOMEcheckFields() {
     	if(EDITINCOMEnameTxt.getText().isEmpty() && EDITINCOMEamountTxt.getText().isEmpty()) {
+    		return false;
+    	}else {
     		if(editIncomeIndex instanceof IrregularIncome) {
     			if(EDITINCOMEpurposeTxt.getText().isEmpty()) {
     				return false;
@@ -761,9 +765,7 @@ public class AssistantGUI {
     			}
     		}else {
     			return true;
-    		}
-    	}else {
-    	 return false;	
+    		}	
     	}
     }
     
