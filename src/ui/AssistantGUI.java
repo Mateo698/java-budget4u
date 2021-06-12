@@ -69,7 +69,7 @@ public class AssistantGUI {
 	private int[] boundsOne;
 	private int[] boundsTwo;
 	
-	public AssistantGUI() {
+	public AssistantGUI(){
 		assistant = new Assistant();
 		//assistant.createUser("Admin", "123",TypesOfUser.STUDENT);
 		editIncomeIndex = null;
@@ -936,11 +936,6 @@ public class AssistantGUI {
     	}    	
     }
     
-
-    @FXML
-    void OUTLAYLISTtypeSortCB(ActionEvent event) {
-
-    }
 
 
     @FXML

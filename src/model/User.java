@@ -12,9 +12,7 @@ import java.util.GregorianCalendar;
  * @version 1.0
 */
 public abstract class User implements Serializable{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1;
 	String name, password;
 	long currentMoney;
@@ -257,13 +255,18 @@ public abstract class User implements Serializable{
 					leave = true;
 				}
 			}
-			Collections.sort(realOutlays);
-			OutlayNode newFirst = new OutlayNode(realOutlays.get(0).getName(),realOutlays.get(0));
-			for(int i=1;i<realOutlays.size();i++) {
-				Node newNode = new OutlayNode(realOutlays.get(i).getName(),realOutlays.get(i));
-				newFirst.addNode(newNode);
+			if(realOutlays.size() == 0) {
+				firstOutlay = null;
+			}else {
+				Collections.sort(realOutlays);
+				OutlayNode newFirst = new OutlayNode(realOutlays.get(0).getName(),realOutlays.get(0));
+				for(int i=1;i<realOutlays.size();i++) {
+					Node newNode = new OutlayNode(realOutlays.get(i).getName(),realOutlays.get(i));
+					newFirst.addNode(newNode);
+				}
+				firstOutlay =  newFirst;
 			}
-			firstOutlay =  newFirst;
+			
 		}
 	}
 	
