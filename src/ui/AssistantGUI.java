@@ -171,8 +171,8 @@ public class AssistantGUI {
     private Circle MAINMENUball2;    
 
     @FXML
-    void MAINPANElogOut(ActionEvent event) {
-
+    void MAINPANElogOut(ActionEvent event) throws IOException {
+    	showLogin();
     }
     
     @FXML
