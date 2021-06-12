@@ -181,6 +181,8 @@ public class AssistantGUI {
     	showLogin();
     }
     
+    
+    
     @FXML
     private Label MAINMENUbalanceLabel;
 
